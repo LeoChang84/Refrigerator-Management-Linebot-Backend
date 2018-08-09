@@ -21,7 +21,6 @@ public class FoodController {
     ShoppingListRepository shoppingListRepository;
 
     @GetMapping(value = "/{userId}/shopping_list", produces = "application/json")
-    // @RequestMapping(value = "/test")
     public ResponseEntity<Food> GetBusTimeline(@PathVariable("userId") String userId) {
         System.out.println("-----before fetch-----");
         Food food = shoppingListRepository.findByNameZh("高麗菜");
