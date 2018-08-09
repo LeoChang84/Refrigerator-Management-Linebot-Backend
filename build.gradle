@@ -15,14 +15,14 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 jar {
-    baseName = 'rest-service'
+    baseName = 'gs-rest-service'
+    version =  '0.1.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -38,6 +38,16 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
 }
 
-task stage {
-    dependsOn build
+
+task stage(type: Copy, dependsOn: [clean, build]) {
+    from jar.archivePath
+    into project.rootDir
+    rename {
+        'app.jar'
+    }
+}
+stage.mustRunAfter(clean)
+
+clean << {
+    project.file('app.jar').delete()
 }
