@@ -30,7 +30,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-mongodb')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-tomcat')
-    testCompile("junit:junit")
+    testCompile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6')
+    testCompile('junit:junit')
 }
 
 task wrapper(type: Wrapper) {
