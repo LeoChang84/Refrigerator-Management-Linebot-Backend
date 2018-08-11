@@ -3,7 +3,10 @@ package service.controller;
 import service.model.Food;
 import service.data.ShoppingList;
 import service.data.ShoppingItem;
+import service.data.RecommendationList;
+import service.data.RecommendationItem;
 import service.repository.CabinetRepository;
+import service.util.Pair;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +22,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.Boolean;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping(value = "/cabinet")
@@ -49,16 +55,47 @@ public class CabinetController {
         return new ResponseEntity<>(shoppingList, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{userId}/recommedation_list", produces = "application/json")
-    public ResponseEntity<Food> GetRecommedationList(@PathVariable("userId") String userId) {
+    @GetMapping(value = "/{userId}/recommendation_list", produces = "application/json")
+    public ResponseEntity<RecommendationList> GetRecommedationList(@PathVariable("userId") String userId) {
+        System.out.println("-----RecommendationList-----");
         System.out.println("-----before fetch-----");
-        List<Food> foods = cabinetRepository.findByStatus(2);
-        if (null == foods.get(0)) {
-        	System.out.println("foods got nothing.");
+        List<Food> foods = cabinetRepository.findByStatus(3);
+        if (null == foods || foods.isEmpty()) {
+        	System.out.println("-----foods got nothing.------");
+        	RecommendationList recommendationList = new RecommendationList(new ArrayList<>());
+        	return new ResponseEntity<>(recommendationList, HttpStatus.OK);
         }
         System.out.println("------after fetch-----");
-        Food food = foods.get(0);
-        return new ResponseEntity<>(food, HttpStatus.OK);
+
+        Map<Pair, Integer> recommendationItemsMap = new HashMap<Pair, Integer>();
+        for (Food food: foods) {	
+    		Pair key = new Pair(food.getNameZh(), food.getType());
+        	Boolean contains = Boolean.FALSE;
+        	for (Map.Entry<Pair, Integer> entry: recommendationItemsMap.entrySet()) {
+        		if (entry.getKey().equals(new Pair(food.getNameZh(), food.getType()))) {
+        			key = entry.getKey();
+        			contains = Boolean.TRUE;
+        			break;
+        		}
+        	}
+        	// System.out.println(contains);
+        	if (!contains) {
+        		recommendationItemsMap.put(key, 1);
+        	} else {
+        		Integer value = recommendationItemsMap.get(key);
+        		recommendationItemsMap.put(key, value + 1);
+        	}
+        	// System.out.println(key.getLeft() + key.getRight() + recommendationItemsMap.get(key));
+        }
+        List<RecommendationItem> recommendationItems = new ArrayList<>();
+        for (Map.Entry<Pair, Integer> entry: recommendationItemsMap.entrySet()) {
+        	RecommendationItem recommendationItem = new RecommendationItem(entry.getKey().getLeft(), entry.getKey().getRight(), entry.getValue());
+        	System.out.println(entry.getKey().getLeft() + entry.getKey().getRight() + entry.getValue());
+        	recommendationItems.add(recommendationItem);
+        }
+        
+        RecommendationList recommendationList = new RecommendationList(recommendationItems);
+        return new ResponseEntity<>(recommendationList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/buy", produces = "application/json")

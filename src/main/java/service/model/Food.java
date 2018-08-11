@@ -17,17 +17,17 @@ public class Food {
     private String acquisitionDate;
     private String expirationDate;
     private Integer status; // 1: in shopping. 2: in refrigerator. 3: has been eaten
-    private Boolean eaten;
+    private Boolean eatenBeforeExpired;
     private Boolean notify;
 
 
-	public Food (String nameZh, String type, String acquisitionDate, String expirationDate, Integer status, Boolean eaten, Boolean notify) {
+	public Food (String nameZh, String type, String acquisitionDate, String expirationDate, Integer status, Boolean eatenBeforeExpired, Boolean notify) {
 		this.nameZh = nameZh;
 		this.type = type;
 		this.acquisitionDate = acquisitionDate;
     	this.expirationDate = expirationDate;
     	this.status = status;
-    	this.eaten = eaten;
+    	this.eatenBeforeExpired = eatenBeforeExpired;
     	this.notify =notify;
 	}
 	
@@ -51,8 +51,8 @@ public class Food {
     	return status;
     }
 
-    public Boolean getEaten() {
-    	return eaten;
+    public Boolean getEatenBeforeExpired() {
+    	return eatenBeforeExpired;
     }
 
     public Boolean getNotify() {
