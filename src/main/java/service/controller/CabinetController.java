@@ -144,7 +144,7 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{userId}/addItem", produces = "application/json")
+    @PostMapping(value = "/{userId}/add_item", produces = "application/json")
     public ResponseEntity<String> PostAddedItem(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
     	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -169,7 +169,7 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
-	@GetMapping(value = "/{userId}/recentlyAdded", produces = "application/json")
+	@GetMapping(value = "/{userId}/recently_added", produces = "application/json")
     public ResponseEntity<RefrigeratorList> GetRecentlyAdded(@PathVariable("userId") String userId) {
         System.out.println("-----GetRecentlyAdded-----");
         System.out.println("-----before fetch-----");
@@ -179,6 +179,28 @@ public class CabinetController {
 		String formattedString = localDate.format(formatter);
 
         List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus(formattedString ,2);
+
+        if (null == foods || foods.isEmpty()) {
+        	System.out.println("-----foods got nothing.------");
+        	RefrigeratorList refrigeratorList = new RefrigeratorList(new ArrayList<>());
+        	return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
+        }
+        System.out.println("------after fetch-----");
+        List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
+        for (Food food: foods) {
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	refrigeratorItems.add(refrigeratorItem);
+        }
+        RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
+        return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
+    }
+
+	@GetMapping(value = "/{userId}/item_in_refrigerator", produces = "application/json")
+    public ResponseEntity<RefrigeratorList> GetItemInRefrigerator(@PathVariable("userId") String userId) {
+        System.out.println("-----GetItemInRefrigerator-----");
+        System.out.println("-----before fetch-----");
+
+        List<Food> foods = cabinetRepository.findByStatus(2);
 
         if (null == foods || foods.isEmpty()) {
         	System.out.println("-----foods got nothing.------");

@@ -67,7 +67,7 @@ save to db.%
 ### Post the adding item manually
 
 ```
-curl --header "Content-Type: application/json" --request POST --data '{"nameZh":"可樂","type":"飲料","expirationDate":"2019-09-29"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/addItem
+curl --header "Content-Type: application/json" --request POST --data '{"nameZh":"可樂","type":"飲料","expirationDate":"2019-09-29"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item
 ```
 
 Then, you would get the result like the following:
@@ -79,7 +79,7 @@ save to db.%
 ### Get the Items been added recently
 
 ```
-curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/recentlyAdded"
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/recently_added"
 ```
 
 Then, you would get the result like the following:
@@ -87,3 +87,16 @@ Then, you would get the result like the following:
 ```
 {"refrigeratorList":[{"nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"大白菜","type":"青菜","acquisitionDate":"20180810","expirationDate":"7"},{"nameZh":"牛肉片","type":"肉","acquisitionDate":"20180810","expirationDate":"10"},{"nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"20180810","expirationDate":"360"}]}
 ```
+
+### Get the Items been added recently
+
+```
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/item_in_refrigerator"
+```
+
+Then, you would get the result like the following:
+
+```
+{"refrigeratorList":[{"nameZh":"牛奶","type":"飲料","acquisitionDate":"20180812","expirationDate":"8"},{"nameZh":"可樂","type":"飲料","acquisitionDate":"20180812","expirationDate":"413"},{"nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"大白菜","type":"青菜","acquisitionDate":"20180810","expirationDate":"7"},{"nameZh":"水梨","type":"水果","acquisitionDate":"20180812","expirationDate":"7"},{"nameZh":"冷凍水餃","type":"冷凍食品","acquisitionDate":"20180812","expirationDate":"720"},{"nameZh":"牛肉片","type":"肉","acquisitionDate":"20180810","expirationDate":"10"},{"nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"生命之水","type":"飲料","acquisitionDate":"20180812","expirationDate":"1080"},{"nameZh":"味全糙米漿","type":"飲料","acquisitionDate":"20180812","expirationDate":"10"}]}
+```
+
