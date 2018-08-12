@@ -30,7 +30,13 @@ public class Food {
     	this.eatenBeforeExpired = eatenBeforeExpired;
     	this.notify =notify;
 	}
+
+    public Food() { }
 	
+    public String getId() {
+        return id;
+    }
+
     public String getNameZh() {
     	return nameZh;
     }
@@ -57,5 +63,37 @@ public class Food {
 
     public Boolean getNotify() {
     	return notify;
+    }
+
+    public void setNameZh(String nameZh) {
+        this.nameZh = nameZh;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setAcquisitionDate(String acquisitionDate) {
+        this.acquisitionDate = acquisitionDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setEatenBeforeExpired(Boolean eatenBeforeExpired) {
+        this.eatenBeforeExpired = eatenBeforeExpired;
+    }
+
+    public void setNotify(Boolean notify) {
+        this.notify = notify;
+    }
+
+    public String toString() {
+        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " " + expirationDate + " " + status.toString() + " " + eatenBeforeExpired.toString() + " " + notify.toString();
     }
 }

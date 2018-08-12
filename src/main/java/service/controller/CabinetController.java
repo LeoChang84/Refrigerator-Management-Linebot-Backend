@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -188,7 +189,7 @@ public class CabinetController {
         System.out.println("------after fetch-----");
         List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
         for (Food food: foods) {
-        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId() ,food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
         	refrigeratorItems.add(refrigeratorItem);
         }
         RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
@@ -210,11 +211,39 @@ public class CabinetController {
         System.out.println("------after fetch-----");
         List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
         for (Food food: foods) {
-        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId(), food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
         	refrigeratorItems.add(refrigeratorItem);
         }
         RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
         return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{userId}/edit_item", produces = "application/json")
+    public ResponseEntity<String> PosteditedItem(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    	System.out.println("-----start parsing-----: " + item);
+		ObjectMapper objectmapper = new ObjectMapper();
+		RefrigeratorItem editedItem = objectmapper.readValue(item, RefrigeratorItem.class);
+		System.out.println("--parse--: " + editedItem);
+
+	    Food food = cabinetRepository.findOneByNameZh("牛奶");
+	    if (food == null ) { System.out.println(">>>>>>>>>>>>>>>>>>>"); }
+	    System.out.println("-------" + food + "------");
+        System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + LocalDate.parse(editedItem.getExpirationDate()));
+
+        food.setNameZh(editedItem.getNameZh());
+        food.setType(editedItem.getType());
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String expirationDate = calculateExpirationDate(LocalDate.parse(editedItem.getAcquisitionDate(), formatter), LocalDate.parse(editedItem.getExpirationDate()));
+        food.setExpirationDate(expirationDate);
+
+	    Food foodUpdate = cabinetRepository.save(food);
+
+        System.out.println("-----after save-----" + foodUpdate);
+        String reply = "Edited has bee saved to db." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
     public String calculateExpirationDate(LocalDate now, LocalDate expirationDate) {

@@ -14,13 +14,20 @@ public class RefrigeratorItem {
     private String acquisitionDate;
     private String expirationDate;
 
-	public RefrigeratorItem (String nameZh, String type, String acquisitionDate, String expirationDate) {
-		this.nameZh = nameZh;
+    public RefrigeratorItem () {}
+
+	public RefrigeratorItem (String id, String nameZh, String type, String acquisitionDate, String expirationDate) {
+		this.id = id;
+        this.nameZh = nameZh;
 		this.type = type;
         this.acquisitionDate = acquisitionDate;
         this.expirationDate = expirationDate;
 	}
-	
+
+	public String getId() {
+        return id;
+    }
+
     public String getNameZh() {
     	return nameZh;
     }
@@ -38,6 +45,6 @@ public class RefrigeratorItem {
     }
 
     public String toString() {
-        return "[" + nameZh + " " + type + " " + acquisitionDate + " "  + expirationDate + "]";
+        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " "  + expirationDate + "]";
     }
 }
