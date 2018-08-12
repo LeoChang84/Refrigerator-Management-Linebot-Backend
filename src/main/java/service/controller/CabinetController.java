@@ -6,6 +6,7 @@ import service.data.ShoppingList;
 import service.data.ShoppingItem;
 import service.data.RecommendationList;
 import service.data.RecommendationItem;
+import service.data.AddedItem;
 import service.repository.CabinetRepository;
 import service.repository.ExpirationRepository;
 import service.util.Pair;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.io.IOException;
 import java.lang.Boolean;
 import java.util.List;
@@ -140,4 +142,32 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/{userId}/addItem", produces = "application/json")
+    public ResponseEntity<String> PostAddedItem(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    	System.out.println("-----start parsing-----: " + item);
+		ObjectMapper objectmapper = new ObjectMapper();
+		AddedItem addedItem = objectmapper.readValue(item, AddedItem.class);
+		System.out.println("--parse--: " + addedItem);
+
+		LocalDate localDate = LocalDate.now();//For reference
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		String formattedString = localDate.format(formatter);
+
+        System.out.println("-----before save-----" + formattedString);
+        
+        String expirationDate = calculateExpirationDate(LocalDate.now(), LocalDate.parse(addedItem.getExpirationDate()));
+
+        System.out.println("---ExpirationDoc: " + expirationDate);
+    	Food food = cabinetRepository.save(new Food(addedItem.getNameZh(), addedItem.getType(), formattedString, expirationDate, 2, null, Boolean.TRUE));
+        
+        System.out.println("-----after save-----");
+        String reply = "save to db." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
+    public String calculateExpirationDate(LocalDate now, LocalDate expirationDate) {
+    	return String.valueOf(ChronoUnit.DAYS.between(now, expirationDate));
+    }
 }
