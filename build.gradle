@@ -30,6 +30,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-mongodb')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-tomcat')
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.3')
+    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6')
+    compile(group: 'joda-time', name: 'joda-time', version: '2.10')
     testCompile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6')
     testCompile('junit:junit')
 }

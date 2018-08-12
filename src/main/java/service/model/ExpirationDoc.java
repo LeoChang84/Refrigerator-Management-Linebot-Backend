@@ -1,22 +1,26 @@
-package service.data;
+package service.model;
+
+import service.model.Food;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.Boolean;
 
-public class ShoppingItem {
+@Document(collection = "expiration_doc")
+public class ExpirationDoc {
 
 	@Id
 	private String id;
     private String nameZh;
     private String type;
+    private String expirationDate;
 
-    public ShoppingItem() { }
 
-	public ShoppingItem (String nameZh, String type) {
+	public ExpirationDoc (String nameZh, String type, String expirationDate) {
 		this.nameZh = nameZh;
 		this.type = type;
+    	this.expirationDate = expirationDate;
 	}
 	
     public String getNameZh() {
@@ -27,7 +31,11 @@ public class ShoppingItem {
     	return type;
     }
 
+    public String getExpirationDate() {
+    	return expirationDate;
+    }
+
     public String toString() {
-        return "[" + nameZh + " " + type + "]";
+        return "[" + nameZh + " " + type + " " + expirationDate +"]";
     }
 }
