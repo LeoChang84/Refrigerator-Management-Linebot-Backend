@@ -178,7 +178,7 @@ public class CabinetController {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		String formattedString = localDate.format(formatter);
 
-        List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus("20180810" ,2);
+        List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus(formattedString ,2);
 
         if (null == foods || foods.isEmpty()) {
         	System.out.println("-----foods got nothing.------");
