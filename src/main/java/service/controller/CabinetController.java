@@ -7,6 +7,8 @@ import service.data.ShoppingItem;
 import service.data.RecommendationList;
 import service.data.RecommendationItem;
 import service.data.AddedItem;
+import service.data.RefrigeratorList;
+import service.data.RefrigeratorItem;
 import service.repository.CabinetRepository;
 import service.repository.ExpirationRepository;
 import service.util.Pair;
@@ -151,7 +153,7 @@ public class CabinetController {
 		AddedItem addedItem = objectmapper.readValue(item, AddedItem.class);
 		System.out.println("--parse--: " + addedItem);
 
-		LocalDate localDate = LocalDate.now();//For reference
+		LocalDate localDate = LocalDate.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		String formattedString = localDate.format(formatter);
 
@@ -165,6 +167,32 @@ public class CabinetController {
         System.out.println("-----after save-----");
         String reply = "save to db." ;
         return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
+	@GetMapping(value = "/{userId}/recentlyAdded", produces = "application/json")
+    public ResponseEntity<RefrigeratorList> GetRecentlyAdded(@PathVariable("userId") String userId) {
+        System.out.println("-----GetRecentlyAdded-----");
+        System.out.println("-----before fetch-----");
+		
+		LocalDate localDate = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		String formattedString = localDate.format(formatter);
+
+        List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus("20180810" ,2);
+
+        if (null == foods || foods.isEmpty()) {
+        	System.out.println("-----foods got nothing.------");
+        	RefrigeratorList refrigeratorList = new RefrigeratorList(new ArrayList<>());
+        	return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
+        }
+        System.out.println("------after fetch-----");
+        List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
+        for (Food food: foods) {
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	refrigeratorItems.add(refrigeratorItem);
+        }
+        RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
+        return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
     }
 
     public String calculateExpirationDate(LocalDate now, LocalDate expirationDate) {

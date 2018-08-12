@@ -75,3 +75,15 @@ Then, you would get the result like the following:
 ```
 save to db.%
 ```
+
+### Get the Items been added recently
+
+```
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/recentlyAdded"
+```
+
+Then, you would get the result like the following:
+
+```
+{"refrigeratorList":[{"nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"大白菜","type":"青菜","acquisitionDate":"20180810","expirationDate":"7"},{"nameZh":"牛肉片","type":"肉","acquisitionDate":"20180810","expirationDate":"10"},{"nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"20180810","expirationDate":"360"}]}
+```

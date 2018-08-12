@@ -10,5 +10,6 @@ import java.util.List;
 public interface CabinetRepository extends MongoRepository<Food, String> {
 
 	public Food findByNameZh(String nameZh); 
+	public List<Food> findByAcquisitionDateAndStatus(String acquisitionDate, Integer status);
 	public List<Food> findByStatus(Integer status);
 }
