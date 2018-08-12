@@ -55,7 +55,7 @@ Then, you would get the result like the following:
 ### Post the shopping list item
 
 ```
-curl --header "Content-Type: application/json"  --request POST  --data '[{"nameZh":"牛奶","type":"飲料"}]' http://localhost:8080/cabinet/123/buy
+curl --header "Content-Type: application/json"  --request POST  --data '[{"nameZh":"牛奶","type":"飲料"}]' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/buy
 ```
 
 Then, you would get the result like the following:
