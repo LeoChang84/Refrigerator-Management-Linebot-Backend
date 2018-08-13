@@ -76,6 +76,32 @@ public class CabinetController {
         return new ResponseEntity<>(shoppingList, HttpStatus.OK);
     }
 
+    // @PostMapping(value = "/{userId}/add_item_to_shoppingist", produces = "application/json")
+    // public ResponseEntity<String> AddItemToShoppingList(@RequestBody String buyList) throws JsonGenerationException ,JsonMappingException, IOException {
+    //     ObjectMapper objectMapper = new ObjectMapper();
+    //     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+    //     ObjectMapper objectmapper = new ObjectMapper();
+    //     List<ShoppingItem> shoppingItems = objectmapper.readValue(buyList, new TypeReference<List<ShoppingItem>>(){});
+    //     System.out.println("--parse--: " + shoppingItems);
+
+    //     LocalDate localDate = LocalDate.now();//For reference
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+    //     String formattedString = localDate.format(formatter);
+
+    //     System.out.println("-----before save-----" + formattedString);
+    //     for (ShoppingItem shoppingItem: shoppingItems) {
+    //         System.out.println("----parsing shoppingItem---");
+    //         ExpirationDoc expirationDoc = expirationRepository.findByNameZh(shoppingItem.getNameZh());
+    //         System.out.println("---ExpirationDoc: " + expirationDoc);
+    //         Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), formattedString, expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
+    //         System.out.println(food.getNameZh() + " " + food.getType() + " " + food.getAcquisitionDate() + " " + food.getExpirationDate() + " " + food.getStatus() + " " + food.getEatenBeforeExpired() + " " + food.getNotify());
+    //     }
+    //     System.out.println("-----after save-----");
+    //     String reply = "Add item to shoppingList." ;
+    //     return new ResponseEntity<>(reply, HttpStatus.OK);
+    // }
+
     @GetMapping(value = "/{userId}/recommendation_list", produces = "application/json")
     public ResponseEntity<RecommendationList> GetRecommedationList(@PathVariable("userId") String userId) {
         System.out.println("-----RecommendationList-----");
