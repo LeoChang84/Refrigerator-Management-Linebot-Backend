@@ -55,6 +55,18 @@ Then, you would get the result like the following:
 ### Post the shopping list item
 
 ```
+curl --header "Content-Type: application/json"  --request POST  --data '{"nameZh":"牛奶"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist
+```
+
+Then, you would get the result like the following:
+
+```
+Add item to shoppingList.%
+```
+
+### Post the shopping list item
+
+```
 curl --header "Content-Type: application/json"  --request POST  --data '[{"nameZh":"牛奶","type":"飲料"}]' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/buy
 ```
 

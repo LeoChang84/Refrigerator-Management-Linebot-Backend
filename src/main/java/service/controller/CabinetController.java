@@ -9,6 +9,7 @@ import service.data.RecommendationItem;
 import service.data.AddedItem;
 import service.data.RefrigeratorList;
 import service.data.RefrigeratorItem;
+import service.data.AddItemToShoppingList;
 import service.repository.CabinetRepository;
 import service.repository.ExpirationRepository;
 import service.util.Pair;
@@ -76,31 +77,21 @@ public class CabinetController {
         return new ResponseEntity<>(shoppingList, HttpStatus.OK);
     }
 
-    // @PostMapping(value = "/{userId}/add_item_to_shoppingist", produces = "application/json")
-    // public ResponseEntity<String> AddItemToShoppingList(@RequestBody String buyList) throws JsonGenerationException ,JsonMappingException, IOException {
-    //     ObjectMapper objectMapper = new ObjectMapper();
-    //     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    @PostMapping(value = "/{userId}/add_item_to_shoppingist", produces = "application/json")
+    public ResponseEntity<String> AddItemToShoppingList(@RequestBody String itemNameZh) throws JsonGenerationException ,JsonMappingException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-    //     ObjectMapper objectmapper = new ObjectMapper();
-    //     List<ShoppingItem> shoppingItems = objectmapper.readValue(buyList, new TypeReference<List<ShoppingItem>>(){});
-    //     System.out.println("--parse--: " + shoppingItems);
+        ObjectMapper objectmapper = new ObjectMapper();
+        AddItemToShoppingList addItemToShoppingList = objectmapper.readValue(itemNameZh, AddItemToShoppingList.class);
+        System.out.println("--parse--: " + addItemToShoppingList.getNameZh());
 
-    //     LocalDate localDate = LocalDate.now();//For reference
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-    //     String formattedString = localDate.format(formatter);
-
-    //     System.out.println("-----before save-----" + formattedString);
-    //     for (ShoppingItem shoppingItem: shoppingItems) {
-    //         System.out.println("----parsing shoppingItem---");
-    //         ExpirationDoc expirationDoc = expirationRepository.findByNameZh(shoppingItem.getNameZh());
-    //         System.out.println("---ExpirationDoc: " + expirationDoc);
-    //         Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), formattedString, expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
-    //         System.out.println(food.getNameZh() + " " + food.getType() + " " + food.getAcquisitionDate() + " " + food.getExpirationDate() + " " + food.getStatus() + " " + food.getEatenBeforeExpired() + " " + food.getNotify());
-    //     }
-    //     System.out.println("-----after save-----");
-    //     String reply = "Add item to shoppingList." ;
-    //     return new ResponseEntity<>(reply, HttpStatus.OK);
-    // }
+        Food food = cabinetRepository.save(new Food(addItemToShoppingList.getNameZh(), "其他", null, null, 1, null, null));
+        
+        System.out.println("-----after save-----");
+        String reply = "Add item to shoppingList." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/{userId}/recommendation_list", produces = "application/json")
     public ResponseEntity<RecommendationList> GetRecommedationList(@PathVariable("userId") String userId) {
