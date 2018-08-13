@@ -154,16 +154,17 @@ public class CabinetController {
 		List<ShoppingItem> shoppingItems = objectmapper.readValue(buyList, new TypeReference<List<ShoppingItem>>(){});
 		System.out.println("--parse--: " + shoppingItems);
 
-		LocalDate localDate = LocalDate.now();//For reference
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		String formattedString = localDate.format(formatter);
+		LocalDate now = LocalDate.now();//For reference
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		// String formattedString = now.format(formatter);
 
-        System.out.println("-----before save-----" + formattedString);
+        System.out.println("-----before save-----" + now);
         for (ShoppingItem shoppingItem: shoppingItems) {
         	System.out.println("----parsing shoppingItem---");
         	ExpirationDoc expirationDoc = expirationRepository.findByNameZh(shoppingItem.getNameZh());
         	System.out.println("---ExpirationDoc: " + expirationDoc);
-        	Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), formattedString, expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
+        	// Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), formattedString, expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
+            Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), String.valueOf(now), expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
         	System.out.println(food.getNameZh() + " " + food.getType() + " " + food.getAcquisitionDate() + " " + food.getExpirationDate() + " " + food.getStatus() + " " + food.getEatenBeforeExpired() + " " + food.getNotify());
         }
         System.out.println("-----after save-----");
@@ -180,16 +181,16 @@ public class CabinetController {
 		AddedItem addedItem = objectmapper.readValue(item, AddedItem.class);
 		System.out.println("--parse--: " + addedItem);
 
-		LocalDate localDate = LocalDate.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		String formattedString = localDate.format(formatter);
+		LocalDate now = LocalDate.now();
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		// String formattedString = localDate.format(formatter);
 
-        System.out.println("-----before save-----" + formattedString);
+        System.out.println("-----before save-----" + now);
         
-        String expirationDate = calculateExpirationDate(LocalDate.now(), LocalDate.parse(addedItem.getExpirationDate()));
+        String expirationDate = calculateExpirationDate(now, LocalDate.parse(addedItem.getExpirationDate()));
 
         System.out.println("---ExpirationDoc: " + expirationDate);
-    	Food food = cabinetRepository.save(new Food(addedItem.getNameZh(), addedItem.getType(), formattedString, expirationDate, 2, null, Boolean.TRUE));
+    	Food food = cabinetRepository.save(new Food(addedItem.getNameZh(), addedItem.getType(), String.valueOf(now), expirationDate, 2, null, Boolean.TRUE));
         
         System.out.println("-----after save-----");
         String reply = "save to db." ;
@@ -201,11 +202,12 @@ public class CabinetController {
         System.out.println("-----GetRecentlyAdded-----");
         System.out.println("-----before fetch-----");
 		
-		LocalDate localDate = LocalDate.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		String formattedString = localDate.format(formatter);
+		LocalDate now = LocalDate.now();
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		// String formattedString = localDate.format(formatter);
 
-        List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus(formattedString ,2);
+        // List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus(formattedString ,2);
+        List<Food> foods = cabinetRepository.findByAcquisitionDateAndStatus("2018-08-12" ,2);
 
         if (null == foods || foods.isEmpty()) {
         	System.out.println("-----foods got nothing.------");
@@ -261,8 +263,9 @@ public class CabinetController {
         food.setNameZh(editedItem.getNameZh());
         food.setType(editedItem.getType());
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String expirationDate = calculateExpirationDate(LocalDate.parse(editedItem.getAcquisitionDate(), formatter), LocalDate.parse(editedItem.getExpirationDate()));
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        // String expirationDate = calculateExpirationDate(LocalDate.parse(editedItem.getAcquisitionDate(), formatter), LocalDate.parse(editedItem.getExpirationDate()));
+        String expirationDate = calculateExpirationDate(LocalDate.parse(editedItem.getAcquisitionDate()), LocalDate.parse(editedItem.getExpirationDate()));
         food.setExpirationDate(expirationDate);
 
 	    Food foodUpdate = cabinetRepository.save(food);
@@ -287,7 +290,7 @@ public class CabinetController {
         System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        Integer expirationOrNot = Integer.valueOf(calculateExpirationDate(LocalDate.now(), LocalDate.parse(editedItem.getAcquisitionDate(), formatter).plusDays(Integer.valueOf(editedItem.getExpirationDate()))));
+        Integer expirationOrNot = Integer.valueOf(calculateExpirationDate(LocalDate.now(), LocalDate.parse(editedItem.getAcquisitionDate()).plusDays(Integer.valueOf(editedItem.getExpirationDate()))));
         
         Boolean expirationBoolean = Boolean.TRUE; 
         if (expirationOrNot <  0) { expirationBoolean = Boolean.FALSE;} 
