@@ -225,17 +225,17 @@ public class CabinetController {
     	System.out.println("-----start parsing-----: " + item);
 		ObjectMapper objectmapper = new ObjectMapper();
 		RefrigeratorItem editedItem = objectmapper.readValue(item, RefrigeratorItem.class);
-		System.out.println("--parse--: " + editedItem);
+		System.out.println("--parse--: " + editedItem.getId() + " " + editedItem.getType() + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
 
-	    Food food = cabinetRepository.findOneByNameZh("牛奶");
-	    if (food == null ) { System.out.println(">>>>>>>>>>>>>>>>>>>"); }
-	    System.out.println("-------" + food + "------");
-        System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + LocalDate.parse(editedItem.getExpirationDate()));
+        Food food = cabinetRepository.findOneById(editedItem.getId());
+        if (food == null) { System.out.println(">>>>>>>>>> food doesn's not find <<<<<<<<<"); }
+        System.out.println("-------" + food + "------");
+        System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
 
         food.setNameZh(editedItem.getNameZh());
         food.setType(editedItem.getType());
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String expirationDate = calculateExpirationDate(LocalDate.parse(editedItem.getAcquisitionDate(), formatter), LocalDate.parse(editedItem.getExpirationDate()));
         food.setExpirationDate(expirationDate);
 
