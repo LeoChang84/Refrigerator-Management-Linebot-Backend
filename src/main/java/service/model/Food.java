@@ -94,6 +94,6 @@ public class Food {
     }
 
     public String toString() {
-        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " " + expirationDate + " " + status.toString() + " " + eatenBeforeExpired.toString() + " " + notify.toString();
+        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " " + expirationDate + "]";
     }
 }
