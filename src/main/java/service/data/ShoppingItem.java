@@ -18,7 +18,15 @@ public class ShoppingItem {
 		this.nameZh = nameZh;
 		this.type = type;
 	}
-	
+
+    public ShoppingItem (String id, String nameZh, String type) {
+        this.id = id;
+        this.nameZh = nameZh;
+        this.type = type;
+    }
+    public String getId() {
+        return id;
+    }
     public String getNameZh() {
     	return nameZh;
     }

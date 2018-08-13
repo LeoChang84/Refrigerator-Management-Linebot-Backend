@@ -93,6 +93,23 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/{userId}/delete_item_from_shoppingist", produces = "application/json")
+    public ResponseEntity<String> DeleteItemfromShoppingList(@RequestBody String deleteItem) throws JsonGenerationException ,JsonMappingException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        ObjectMapper objectmapper = new ObjectMapper();
+        ShoppingItem shoppingItem = objectmapper.readValue(deleteItem, ShoppingItem.class);
+        System.out.println("--parse--: " + shoppingItem);
+
+        Food food = cabinetRepository.findOneById(shoppingItem.getId());
+        food.setStatus(4);
+        food = cabinetRepository.save(food);
+        System.out.println("-----after save-----" + food);
+        String reply = "Delete item from shoppingList." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{userId}/recommendation_list", produces = "application/json")
     public ResponseEntity<RecommendationList> GetRecommedationList(@PathVariable("userId") String userId) {
         System.out.println("-----RecommendationList-----");
@@ -285,7 +302,7 @@ public class CabinetController {
         
         Boolean expirationBoolean = Boolean.TRUE; 
         if (expirationOrNot <  0) { expirationBoolean = Boolean.FALSE;} 
-        food.setStatus(3);
+        food.setStatus(1);
         food.setEatenBeforeExpired(expirationBoolean);
         food.setNotify(Boolean.FALSE);
 

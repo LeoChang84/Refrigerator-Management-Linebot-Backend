@@ -64,7 +64,19 @@ Then, you would get the result like the following:
 Add item to shoppingList.%
 ```
 
-### Post the shopping list item
+### Delete item from the shopping list
+
+```
+curl --header "Content-Type: application/json"  --request POST  --data '{"id":"5b6fb35b08f3e000045888b1", "type": "飲料", "nameZh":"牛奶"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist
+```
+
+Then, you would get the result like the following:
+
+```
+Delete item from shoppingList.%
+```
+
+### Buy the shopping list's item
 
 ```
 curl --header "Content-Type: application/json"  --request POST  --data '[{"nameZh":"牛奶","type":"飲料"}]' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/buy
