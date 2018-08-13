@@ -242,7 +242,37 @@ public class CabinetController {
 	    Food foodUpdate = cabinetRepository.save(food);
 
         System.out.println("-----after save-----" + foodUpdate);
-        String reply = "Edited has bee saved to db." ;
+        String reply = "Edited has been saved to db." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{userId}/eaten", produces = "application/json")
+    public ResponseEntity<String> HasEaten(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        System.out.println("-----start parsing-----: " + item);
+        ObjectMapper objectmapper = new ObjectMapper();
+        RefrigeratorItem editedItem = objectmapper.readValue(item, RefrigeratorItem.class);
+        System.out.println("--parse--: " + editedItem.getId() + " " + editedItem.getType() + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
+
+        Food food = cabinetRepository.findOneById(editedItem.getId());
+        if (food == null) { System.out.println(">>>>>>>>>> food doesn's not find <<<<<<<<<"); }
+        System.out.println("-------" + food + "------");
+        System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        Integer expirationOrNot = Integer.valueOf(calculateExpirationDate(LocalDate.now(), LocalDate.parse(editedItem.getAcquisitionDate(), formatter).plusDays(Integer.valueOf(editedItem.getExpirationDate()))));
+        
+        Boolean expirationBoolean = Boolean.TRUE; 
+        if (expirationOrNot <  0) { expirationBoolean = Boolean.FALSE;} 
+        food.setStatus(3);
+        food.setEatenBeforeExpired(expirationBoolean);
+        food.setNotify(Boolean.FALSE);
+
+        Food foodUpdate = cabinetRepository.save(food);
+
+        System.out.println("-----after save-----" + foodUpdate);
+        String reply = "Status has been set eaten." ;
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 

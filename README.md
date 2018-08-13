@@ -97,7 +97,7 @@ curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}
 Then, you would get the result like the following:
 
 ```
-{"refrigeratorList":[{"nameZh":"牛奶","type":"飲料","acquisitionDate":"20180812","expirationDate":"8"},{"nameZh":"可樂","type":"飲料","acquisitionDate":"20180812","expirationDate":"413"},{"nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"大白菜","type":"青菜","acquisitionDate":"20180810","expirationDate":"7"},{"nameZh":"水梨","type":"水果","acquisitionDate":"20180812","expirationDate":"7"},{"nameZh":"冷凍水餃","type":"冷凍食品","acquisitionDate":"20180812","expirationDate":"720"},{"nameZh":"牛肉片","type":"肉","acquisitionDate":"20180810","expirationDate":"10"},{"nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"20180810","expirationDate":"360"},{"nameZh":"生命之水","type":"飲料","acquisitionDate":"20180812","expirationDate":"1080"},{"nameZh":"味全糙米漿","type":"飲料","acquisitionDate":"20180812","expirationDate":"10"}]}
+{"refrigeratorList":[{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"20180812","expirationDate":"7"},{"id":"5b6fd8e358152a0004f0a88e","nameZh":"可樂","type":"飲料","acquisitionDate":"20180812","expirationDate":"413"},{"id":"5b6fb35b08f3e100045888b1","nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"20180810","expirationDate":"360"},{"id":"5b6fb35b08f3e110045888b1","nameZh":"大白菜","type":"青菜","acquisitionDate":"20180810","expirationDate":"7"},{"id":"5b6fb35b08f3e111045888b1","nameZh":"水梨","type":"水果","acquisitionDate":"20180812","expirationDate":"7"},{"id":"5b6fb35b08f3e111145888b1","nameZh":"冷凍水餃","type":"冷凍食品","acquisitionDate":"20180812","expirationDate":"720"},{"id":"5b6fb35b08f3e111245888b1","nameZh":"牛肉片","type":"肉","acquisitionDate":"20180810","expirationDate":"10"},{"id":"5b6fb35b08f3e211245888b1","nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"20180810","expirationDate":"360"},{"id":"5b6fb35b18f3e211245888b1","nameZh":"生命之水","type":"飲料","acquisitionDate":"20180812","expirationDate":"1080"},{"id":"5b6fb35b18f3e311245888b1","nameZh":"味全糙米漿","type":"飲料","acquisitionDate":"20180812","expirationDate":"10"}]}
 ```
 
 ### Update selected item's information in refrigerator
@@ -106,3 +106,20 @@ Then, you would get the result like the following:
 curl --header "Content-Type: application/json" --request POST --data '{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"20180812","expirationDate":"2019-12-12"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/edit_item
 ```
 
+Then, you would get the result like the following:
+
+```
+Edited has been saved to db.%
+```
+
+### Update item's status as eaten.
+
+```
+curl --header "Content-Type: application/json" --request POST --data '{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"20180812","expirationDate":"7"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/edit_item
+```
+
+Then, you would get the result like the following:
+
+```
+Edited has been saved to db.%
+```
