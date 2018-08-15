@@ -295,10 +295,10 @@ public class CabinetController {
         Food food = cabinetRepository.findOneById(editedItem.getId());
         if (food == null) { System.out.println(">>>>>>>>>> food doesn's not find <<<<<<<<<"); }
         System.out.println("-------" + food + "------");
-        System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
+        // System.out.println("-----before save-----" + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        Integer expirationOrNot = Integer.valueOf(calculateExpirationDate(LocalDate.now(), LocalDate.parse(editedItem.getAcquisitionDate()).plusDays(Integer.valueOf(editedItem.getExpirationDate()))));
+        Integer expirationOrNot = Integer.valueOf(calculateExpirationDate(LocalDate.now(), LocalDate.parse(food.getAcquisitionDate()).plusDays(Integer.valueOf(food.getExpirationDate()))));
         
         Boolean expirationBoolean = Boolean.TRUE; 
         if (expirationOrNot <  0) { expirationBoolean = Boolean.FALSE;} 
