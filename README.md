@@ -147,3 +147,15 @@ Then, you would get the result like the following:
 ```
 Edited has been saved to db.%
 ```
+
+### Turn off item's notification in refrigerator
+
+```
+curl --header "Content-Type: application/json" --request POST --data '{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"2019-12-12"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/unnotify
+```
+
+Then, you would get the result like the following:
+
+```
+Notify has been turned off..%
+```

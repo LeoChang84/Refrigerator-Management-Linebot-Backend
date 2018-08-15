@@ -313,6 +313,24 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/{userId}/unnotify", produces = "application/json")
+    public ResponseEntity<String> NotNotify(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        System.out.println("-----start parsing-----: " + item);
+        ObjectMapper objectmapper = new ObjectMapper();
+        RefrigeratorItem editedItem = objectmapper.readValue(item, RefrigeratorItem.class);
+
+        Food food = cabinetRepository.findOneById(editedItem.getId());
+        if (food == null) { System.out.println(">>>>>>>>>> food doesn's not find <<<<<<<<<"); }
+        System.out.println("-------" + food + "------");
+        food.setNotify(Boolean.FALSE);
+        Food foodUpdate = cabinetRepository.save(food);
+        System.out.println("-----after save-----" + foodUpdate);
+        String reply = "Notify has been turned off." ;
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
     public String calculateExpirationDate(LocalDate now, LocalDate expirationDate) {
     	return String.valueOf(ChronoUnit.DAYS.between(now, expirationDate));
     }
