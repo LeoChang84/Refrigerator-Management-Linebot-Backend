@@ -290,7 +290,7 @@ public class CabinetController {
         System.out.println("-----start parsing-----: " + item);
         ObjectMapper objectmapper = new ObjectMapper();
         RefrigeratorItem editedItem = objectmapper.readValue(item, RefrigeratorItem.class);
-        System.out.println("--parse--: " + editedItem.getId() + " " + editedItem.getType() + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
+        // System.out.println("--parse--: " + editedItem.getId() + " " + editedItem.getType() + " " + editedItem.getAcquisitionDate() + " " + editedItem.getExpirationDate());
 
         Food food = cabinetRepository.findOneById(editedItem.getId());
         if (food == null) { System.out.println(">>>>>>>>>> food doesn's not find <<<<<<<<<"); }
