@@ -158,11 +158,14 @@ public class CabinetController {
         for (ShoppingItem shoppingItem: shoppingItems) {
         	System.out.println("----parsing shoppingItem---");
         	ExpirationDoc expirationDoc = expirationRepository.findByNameZh(shoppingItem.getNameZh());
-        	System.out.println("---ExpirationDoc: " + expirationDoc);
         	Food food = cabinetRepository.findOneById(shoppingItem.getId());
         	food.setAcquisitionDate(String.valueOf(now));
-        	food.setExpirationDate(expirationDoc.getExpirationDate());
-        	food.setStatus(2);
+        	if( expirationDoc != null) {
+                food.setExpirationDate(expirationDoc.getExpirationDate());
+            } else {
+                food.setExpirationDate("0");
+            }
+            food.setStatus(2);
         	food.setEatenBeforeExpired(null);
         	food.setNotify(Boolean.TRUE);
 //        	food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), String.valueOf(now), expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
@@ -288,7 +291,7 @@ public class CabinetController {
         
         Boolean expirationBoolean = Boolean.TRUE; 
         if (expirationOrNot <  0) { expirationBoolean = Boolean.FALSE;} 
-        food.setStatus(1);
+        food.setStatus(3);
         food.setEatenBeforeExpired(expirationBoolean);
         food.setNotify(Boolean.FALSE);
 
