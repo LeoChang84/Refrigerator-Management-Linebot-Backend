@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 @RequestMapping(value = "/cabinet")
 public class CabinetController {
 
-	// static private Logger logger = LoggerFactory.getLogger(CabinetController.class.getName()); 
+	static private Logger logger = LoggerFactory.getLogger(CabinetController.class.getName());
 
     @Autowired
     CabinetRepository cabinetRepository;
@@ -59,38 +59,35 @@ public class CabinetController {
 
     @GetMapping(value = "/{userId}/shopping_list", produces = "application/json")
     public ResponseEntity<ShoppingList> GetShoppingList(@PathVariable("userId") String userId) {
-        System.out.println("-----GetShoppingList-----");
-        System.out.println("-----before fetch-----");
+        logger.debug("Start to get ShoppingList");
         List<Food> foods = cabinetRepository.findByStatus(1);
         if (null == foods || foods.isEmpty()) {
-        	System.out.println("-----foods got nothing.------");
+        	logger.debug("Foods got nothing");
         	ShoppingList shoppingList = new ShoppingList(new ArrayList<>());
         	return new ResponseEntity<>(shoppingList, HttpStatus.OK);
         }
-        System.out.println("------after fetch-----");
         List<ShoppingItem> shoppingItems = new ArrayList<>();
         for (Food food: foods) {
-        	ShoppingItem shoppingItem = new ShoppingItem(food.getNameZh(), food.getType());
+        	ShoppingItem shoppingItem = new ShoppingItem(food.getId(), food.getNameZh(), food.getType());
         	shoppingItems.add(shoppingItem);
         }
+        logger.debug("Successfully transform food info to shoppingItem");
         ShoppingList shoppingList = new ShoppingList(shoppingItems);
         return new ResponseEntity<>(shoppingList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/add_item_to_shoppingist", produces = "application/json")
     public ResponseEntity<String> AddItemToShoppingList(@RequestBody String itemNameZh) throws JsonGenerationException ,JsonMappingException, IOException {
+        logger.debug("Start to post item to ShoppingList");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-
         ObjectMapper objectmapper = new ObjectMapper();
         AddItemToShoppingList addItemToShoppingList = objectmapper.readValue(itemNameZh, AddItemToShoppingList.class);
-        System.out.println("--parse--: " + addItemToShoppingList.getNameZh());
 
-        Food food = cabinetRepository.save(new Food(addItemToShoppingList.getNameZh(), "其他", null, null, 1, null, null));
-        
-        System.out.println("-----after save-----");
-        String reply = "Add item to shoppingList." ;
-        return new ResponseEntity<>(reply, HttpStatus.OK);
+        logger.debug("Parse input object successfully: " + itemNameZh);
+        Food food = cabinetRepository.save(new Food(addItemToShoppingList.getNameZh(), addItemToShoppingList.getType(), null, null, 1, null, null));
+        logger.debug("Post item to shopping list.");
+        return new ResponseEntity<>(food.getId(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/delete_item_from_shoppingist", produces = "application/json")

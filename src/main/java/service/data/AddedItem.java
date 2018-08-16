@@ -16,10 +16,12 @@ public class AddedItem {
     public AddedItem() { }
 
 	public AddedItem (String nameZh, String type, String expirationDate) {
+        this.id = id;
 		this.nameZh = nameZh;
 		this.type = type;
         this.expirationDate = expirationDate;
 	}
+	public String getId() { return  id; }
 	
     public String getNameZh() {
     	return nameZh;
@@ -34,6 +36,6 @@ public class AddedItem {
     }
 
     public String toString() {
-        return "[" + nameZh + " " + type + " " + expirationDate + "]";
+        return "[" + id + " " + nameZh + " " + type + " " + expirationDate + "]";
     }
 }

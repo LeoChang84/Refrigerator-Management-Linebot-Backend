@@ -37,7 +37,7 @@ curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}
 Then, you would get the result like the following:
 
 ```
-{"shoppingItems":[{"nameZh":"義美紅豆包","type":"冷凍食品"},{"nameZh":"菠菜","type":"青菜"},{"nameZh":"小黃瓜","type":"青菜"},{"nameZh":"優酪乳","type":"飲料"},{"nameZh":"鮭魚片","type":"海鮮"},{"nameZh":"雞腿肉","type":"肉"},{"nameZh":"雞腿肉","type":"肉"},{"nameZh":"雞腿肉","type":"肉"},{"nameZh":"台灣啤酒","type":"飲料"},{"nameZh":"優酪乳","type":"飲料"}]}
+{"shoppingItems":[{"id":"5b6cf33dc86c5b0004d810bb","nameZh":"義美紅豆包","type":"冷凍食品"},{"id":"5b6cf33dc86c5b0004d810bf","nameZh":"菠菜","type":"青菜"},{"id":"5b6cf33dc86c5b0004d819bf","nameZh":"小黃瓜","type":"青菜"},{"id":"5b6cf43dc86c5b0004d819bf","nameZh":"優酪乳","type":"飲料"},{"id":"5b6cf33dc86c5b0004f810bb","nameZh":"鮭魚片","type":"海鮮"},{"id":"5b4cf33dc86c5b0004d810bb","nameZh":"雞腿肉","type":"肉"},{"id":"5b6cf33dc86c5b1004d820bb","nameZh":"台灣啤酒","type":"飲料"},{"id":"5b6fb35b08f3e111045888b1","nameZh":"水梨","type":"水果"},{"id":"5b6fb35b18f3e311245888b1","nameZh":"味全糙米漿","type":"飲料"},{"id":"5b6cf33dc86c5b2194d810cb","nameZh":"皮卡丘","type":"肉"}]}
 ```
 
 ### Get the recommendation list
@@ -55,13 +55,12 @@ Then, you would get the result like the following:
 ### Post the shopping list item
 
 ```
-curl --header "Content-Type: application/json"  --request POST  --data '{"nameZh":"牛奶"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist
-```
+curl --header "Content-Type: application/json"  --request POST  --data '{"nameZh":"巧克力牛奶", "type":"飲料"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist```
 
 Then, you would get the result like the following:
 
 ```
-Add item to shoppingList.%
+5b74ee7f46ef2a81dcb512e3.%
 ```
 
 ### Delete item from the shopping list

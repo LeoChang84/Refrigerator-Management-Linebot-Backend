@@ -27,6 +27,7 @@ public class ShoppingItem {
     public String getId() {
         return id;
     }
+
     public String getNameZh() {
     	return nameZh;
     }
