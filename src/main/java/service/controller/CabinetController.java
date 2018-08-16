@@ -59,10 +59,10 @@ public class CabinetController {
 
     @GetMapping(value = "/{userId}/shopping_list", produces = "application/json")
     public ResponseEntity<ShoppingList> GetShoppingList(@PathVariable("userId") String userId) {
-        logger.debug("Start to get ShoppingList");
+        logger.info("Start to get ShoppingList");
         List<Food> foods = cabinetRepository.findByStatus(1);
         if (null == foods || foods.isEmpty()) {
-        	logger.debug("Foods got nothing");
+        	logger.info("Foods got nothing");
         	ShoppingList shoppingList = new ShoppingList(new ArrayList<>());
         	return new ResponseEntity<>(shoppingList, HttpStatus.OK);
         }
@@ -71,54 +71,51 @@ public class CabinetController {
         	ShoppingItem shoppingItem = new ShoppingItem(food.getId(), food.getNameZh(), food.getType());
         	shoppingItems.add(shoppingItem);
         }
-        logger.debug("Successfully transform food info to shoppingItem");
+        logger.info("Successfully transform food info to shoppingItem");
         ShoppingList shoppingList = new ShoppingList(shoppingItems);
         return new ResponseEntity<>(shoppingList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/add_item_to_shoppingist", produces = "application/json")
     public ResponseEntity<String> AddItemToShoppingList(@RequestBody String itemNameZh) throws JsonGenerationException ,JsonMappingException, IOException {
-        logger.debug("Start to post item to ShoppingList");
+        logger.info("Start to post item to ShoppingList");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         ObjectMapper objectmapper = new ObjectMapper();
         AddItemToShoppingList addItemToShoppingList = objectmapper.readValue(itemNameZh, AddItemToShoppingList.class);
 
-        logger.debug("Parse input object successfully: " + itemNameZh);
+        logger.info("Parse input object successfully: " + itemNameZh);
         Food food = cabinetRepository.save(new Food(addItemToShoppingList.getNameZh(), addItemToShoppingList.getType(), null, null, 1, null, null));
-        logger.debug("Post item to shopping list.");
+        logger.info("Post item to shopping list.");
         return new ResponseEntity<>(food.getId(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/delete_item_from_shoppingist", produces = "application/json")
     public ResponseEntity<String> DeleteItemfromShoppingList(@RequestBody String deleteItem) throws JsonGenerationException ,JsonMappingException, IOException {
+        logger.info("Start to delete item from ShoppingList");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-
         ObjectMapper objectmapper = new ObjectMapper();
         ShoppingItem shoppingItem = objectmapper.readValue(deleteItem, ShoppingItem.class);
-        System.out.println("--parse--: " + shoppingItem);
+        logger.info("Parse input object successfully: " + shoppingItem);
 
         Food food = cabinetRepository.findOneById(shoppingItem.getId());
         food.setStatus(4);
         food = cabinetRepository.save(food);
-        System.out.println("-----after save-----" + food);
+        logger.info("Delete from db successfully.");
         String reply = "Delete item from shoppingList." ;
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/recommendation_list", produces = "application/json")
     public ResponseEntity<RecommendationList> GetRecommedationList(@PathVariable("userId") String userId) {
-        System.out.println("-----RecommendationList-----");
-        System.out.println("-----before fetch-----");
+        logger.info(" Recommendation List");
         List<Food> foods = cabinetRepository.findByStatus(3);
         if (null == foods || foods.isEmpty()) {
-        	System.out.println("-----foods got nothing.------");
         	RecommendationList recommendationList = new RecommendationList(new ArrayList<>());
         	return new ResponseEntity<>(recommendationList, HttpStatus.OK);
         }
-        System.out.println("------after fetch-----");
-
+        logger.info("Analysis eaten data");
         Map<Pair, Integer> recommendationItemsMap = new HashMap<Pair, Integer>();
         for (Food food: foods) {	
     		Pair key = new Pair(food.getNameZh(), food.getType());
@@ -130,14 +127,12 @@ public class CabinetController {
         			break;
         		}
         	}
-        	// System.out.println(contains);
         	if (!contains) {
         		recommendationItemsMap.put(key, 1);
         	} else {
         		Integer value = recommendationItemsMap.get(key);
         		recommendationItemsMap.put(key, value + 1);
         	}
-        	// System.out.println(key.getLeft() + key.getRight() + recommendationItemsMap.get(key));
         }
         List<RecommendationItem> recommendationItems = new ArrayList<>();
         for (Map.Entry<Pair, Integer> entry: recommendationItemsMap.entrySet()) {
@@ -145,34 +140,36 @@ public class CabinetController {
         	System.out.println(entry.getKey().getLeft() + entry.getKey().getRight() + entry.getValue());
         	recommendationItems.add(recommendationItem);
         }
-
+        logger.info("Got recommendationList");
         RecommendationList recommendationList = new RecommendationList(recommendationItems);
         return new ResponseEntity<>(recommendationList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/buy", produces = "application/json")
     public ResponseEntity<String> PostProuct(@RequestBody String buyList) throws JsonGenerationException ,JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
+		logger.info("Buy item from shopping list");
+        ObjectMapper objectMapper = new ObjectMapper();
     	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-
 		ObjectMapper objectmapper = new ObjectMapper();
 		List<ShoppingItem> shoppingItems = objectmapper.readValue(buyList, new TypeReference<List<ShoppingItem>>(){});
-		System.out.println("--parse--: " + shoppingItems);
+		logger.info("Get shopping item from shopping list" + shoppingItems);
+		LocalDate now = LocalDate.now();
 
-		LocalDate now = LocalDate.now();//For reference
-		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		// String formattedString = now.format(formatter);
-
-        System.out.println("-----before save-----" + now);
         for (ShoppingItem shoppingItem: shoppingItems) {
         	System.out.println("----parsing shoppingItem---");
         	ExpirationDoc expirationDoc = expirationRepository.findByNameZh(shoppingItem.getNameZh());
         	System.out.println("---ExpirationDoc: " + expirationDoc);
-        	// Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), formattedString, expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
-            Food food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), String.valueOf(now), expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
-        	System.out.println(food.getNameZh() + " " + food.getType() + " " + food.getAcquisitionDate() + " " + food.getExpirationDate() + " " + food.getStatus() + " " + food.getEatenBeforeExpired() + " " + food.getNotify());
+        	Food food = cabinetRepository.findOneById(shoppingItem.getId());
+        	food.setAcquisitionDate(String.valueOf(now));
+        	food.setExpirationDate(expirationDoc.getExpirationDate());
+        	food.setStatus(2);
+        	food.setEatenBeforeExpired(null);
+        	food.setNotify(Boolean.TRUE);
+//        	food = cabinetRepository.save(new Food(shoppingItem.getNameZh(), shoppingItem.getType(), String.valueOf(now), expirationDoc.getExpirationDate(), 2, null, Boolean.TRUE));
+            food = cabinetRepository.save(food);
+            logger.info("food info: " + food);
         }
-        System.out.println("-----after save-----");
+        logger.info("save all element to db");
         String reply = "save to db." ;
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
@@ -181,23 +178,16 @@ public class CabinetController {
     public ResponseEntity<String> PostAddedItem(@RequestBody String item) throws JsonGenerationException ,JsonMappingException, IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
     	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    	System.out.println("-----start parsing-----: " + item);
+    	logger.debug("Add item manually: " + item);
 		ObjectMapper objectmapper = new ObjectMapper();
 		AddedItem addedItem = objectmapper.readValue(item, AddedItem.class);
-		System.out.println("--parse--: " + addedItem);
+        logger.debug("Parsed: " + addedItem);
 
 		LocalDate now = LocalDate.now();
-		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		// String formattedString = localDate.format(formatter);
-
-        System.out.println("-----before save-----" + now);
-        
         String expirationDate = calculateExpirationDate(now, LocalDate.parse(addedItem.getExpirationDate()));
-
-        System.out.println("---ExpirationDoc: " + expirationDate);
     	Food food = cabinetRepository.save(new Food(addedItem.getNameZh(), addedItem.getType(), String.valueOf(now), expirationDate, 2, null, Boolean.TRUE));
-        
-        System.out.println("-----after save-----");
+
+        logger.debug("Add successfully.");
         String reply = "save to db." ;
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
@@ -222,7 +212,7 @@ public class CabinetController {
         System.out.println("------after fetch-----");
         List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
         for (Food food: foods) {
-        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId() ,food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId() ,food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate(), food.getNotify());
         	refrigeratorItems.add(refrigeratorItem);
         }
         RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
@@ -231,22 +221,21 @@ public class CabinetController {
 
 	@GetMapping(value = "/{userId}/item_in_refrigerator", produces = "application/json")
     public ResponseEntity<RefrigeratorList> GetItemInRefrigerator(@PathVariable("userId") String userId) {
-        System.out.println("-----GetItemInRefrigerator-----");
-        System.out.println("-----before fetch-----");
+        logger.info("Get Item in Refrigerator");
 
         List<Food> foods = cabinetRepository.findByStatus(2);
 
         if (null == foods || foods.isEmpty()) {
-        	System.out.println("-----foods got nothing.------");
+            logger.info("Foods got nothing");
         	RefrigeratorList refrigeratorList = new RefrigeratorList(new ArrayList<>());
         	return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
         }
-        System.out.println("------after fetch-----");
         List<RefrigeratorItem> refrigeratorItems = new ArrayList<>();
         for (Food food: foods) {
-        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId(), food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate());
+        	RefrigeratorItem refrigeratorItem = new RefrigeratorItem(food.getId(), food.getNameZh(), food.getType(), food.getAcquisitionDate(), food.getExpirationDate(), food.getNotify());
         	refrigeratorItems.add(refrigeratorItem);
         }
+        logger.debug("Get all from refrigerator");
         RefrigeratorList refrigeratorList = new RefrigeratorList(refrigeratorItems);
         return new ResponseEntity<>(refrigeratorList, HttpStatus.OK);
     }

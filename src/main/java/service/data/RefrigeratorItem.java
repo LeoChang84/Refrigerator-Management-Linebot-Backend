@@ -1,9 +1,11 @@
 package service.data;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.Boolean;
+import java.util.function.BinaryOperator;
 
 public class RefrigeratorItem {
 
@@ -13,15 +15,17 @@ public class RefrigeratorItem {
     private String type;
     private String acquisitionDate;
     private String expirationDate;
+    private Boolean notify;
 
     public RefrigeratorItem () {}
 
-	public RefrigeratorItem (String id, String nameZh, String type, String acquisitionDate, String expirationDate) {
+	public RefrigeratorItem (String id, String nameZh, String type, String acquisitionDate, String expirationDate, Boolean notify) {
 		this.id = id;
         this.nameZh = nameZh;
 		this.type = type;
         this.acquisitionDate = acquisitionDate;
         this.expirationDate = expirationDate;
+        this.notify = notify;
 	}
 
 	public String getId() {
@@ -44,7 +48,9 @@ public class RefrigeratorItem {
         return expirationDate;
     }
 
+    public Boolean getNotify() { return  notify; }
+
     public String toString() {
-        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " "  + expirationDate + "]";
+        return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " "  + expirationDate + " " + notify + "]";
     }
 }

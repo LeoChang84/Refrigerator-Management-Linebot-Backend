@@ -55,7 +55,8 @@ Then, you would get the result like the following:
 ### Post the shopping list item
 
 ```
-curl --header "Content-Type: application/json"  --request POST  --data '{"nameZh":"巧克力牛奶", "type":"飲料"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist```
+curl --header "Content-Type: application/json"  --request POST  --data '{"nameZh":"巧克力牛奶", "type":"飲料"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item_to_shoppingist
+```
 
 Then, you would get the result like the following:
 
@@ -78,7 +79,7 @@ Delete item from shoppingList.%
 ### Buy the shopping list's item
 
 ```
-curl --header "Content-Type: application/json"  --request POST  --data '[{"nameZh":"牛奶","type":"飲料"}]' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/buy
+curl --header "Content-Type: application/json"  --request POST  --data '[{"id":"5b74ee7f46ef2a81dcb512e3", "nameZh":"巧克力牛奶"}]' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/buy
 ```
 
 Then, you would get the result like the following:
@@ -120,7 +121,7 @@ curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}
 Then, you would get the result like the following:
 
 ```
-{"refrigeratorList":[{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"2018-08-09","expirationDate":"7"},{"id":"5b6fd8e358152a0004f0a88e","nameZh":"可樂","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"413"},{"id":"5b6fb35b08f3e100045888b1","nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"2018-08-10","expirationDate":"360"},{"id":"5b6fb35b08f3e110045888b1","nameZh":"大白菜","type":"青菜","acquisitionDate":"2018-08-10","expirationDate":"7"},{"id":"5b6fb35b08f3e111045888b1","nameZh":"水梨","type":"水果","acquisitionDate":"2018-08-12","expirationDate":"7"},{"id":"5b6fb35b08f3e111145888b1","nameZh":"冷凍水餃","type":"冷凍食品","acquisitionDate":"2018-08-12","expirationDate":"720"},{"id":"5b6fb35b08f3e111245888b1","nameZh":"牛肉片","type":"肉","acquisitionDate":"2018-08-10","expirationDate":"10"},{"id":"5b6fb35b08f3e211245888b1","nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"2018-08-10","expirationDate":"360"},{"id":"5b6fb35b18f3e211245888b1","nameZh":"生命之水","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"1080"},{"id":"5b6fb35b18f3e311245888b1","nameZh":"味全糙米漿","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"10"}]}%
+{"refrigeratorList":[{"id":"5b6cf33dc86c5b1144d810bb","nameZh":"牛奶","type":"飲料","acquisitionDate":"2018-07-04","expirationDate":"48","notify":false},{"id":"5b6fd8e358152a0004f0a88e","nameZh":"雪碧","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"6","notify":true},{"id":"5b6fb35b08f3e100045888b1","nameZh":"自家醃製小黃瓜","type":"其他","acquisitionDate":"2018-08-10","expirationDate":"360","notify":null},{"id":"5b6fb35b08f3e110045888b1","nameZh":"大白菜","type":"青菜","acquisitionDate":"2018-08-10","expirationDate":"8","notify":true},{"id":"5b6fb35b08f3e111145888b1","nameZh":"冷凍水餃","type":"冷凍食品","acquisitionDate":"2018-08-12","expirationDate":"740","notify":true},{"id":"5b6fb35b08f3e111245888b1","nameZh":"牛肉片","type":"肉","acquisitionDate":"2018-08-10","expirationDate":"10","notify":false},{"id":"5b6fb35b08f3e211245888b1","nameZh":"義美紅豆冰","type":"冷凍食品","acquisitionDate":"2018-08-10","expirationDate":"360","notify":true},{"id":"5b6fb35b18f3e211245888b1","nameZh":"生命之水","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"1080","notify":true},{"id":"5b6cf33dc86c5b1274d810bb","nameZh":"氣泡水","type":"甜點","acquisitionDate":"2015-07-04","expirationDate":"1080","notify":false},{"id":"5b6fd7e358152a0004f0a88e","nameZh":"羊肉串","type":"飲料","acquisitionDate":"2018-08-01","expirationDate":"6","notify":true},{"id":"5b6fd0e358152a0004f0a88e","nameZh":"陳年起司","type":"飲料","acquisitionDate":"1999-08-01","expirationDate":"3600","notify":true},{"id":"5b74da00870ea9000400ab63","nameZh":"f","type":"其他","acquisitionDate":"2018-08-16","expirationDate":"8","notify":true}]}%
 ```
 
 ### Update selected item's information in refrigerator
