@@ -1,6 +1,5 @@
 package service.model;
 
-import org.graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Upload {
