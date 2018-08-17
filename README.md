@@ -159,3 +159,28 @@ Then, you would get the result like the following:
 ```
 Notify has been turned off..%
 ```
+
+### Get all userId
+
+```
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/get_uid"
+```
+
+Then, you would get the result like the following:
+
+```
+{"uidlist":[{"uid":"u22345"},{"uid":"u12345"}]}
+```
+
+
+### Post uid to uidList
+
+```
+curl --header "Content-Type: application/json" --request POST --data '{"uid":"u12345"}' https://refrigerator-mgt-bot-backend.herokuapp.com/user/{userId}/post_uid
+```
+
+Then, you would get the result like the following:
+
+```
+Post uid to UserList.%
+```

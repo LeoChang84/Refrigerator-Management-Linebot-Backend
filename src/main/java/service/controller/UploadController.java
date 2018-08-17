@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@RestController
+@Controller
 @RequestMapping(value = "/upload")
 public class UploadController {
 
@@ -32,7 +32,7 @@ public class UploadController {
     // 3.1.1 Single file upload
     @PostMapping(value = "/receipt" , produces = "application/json")
     // If not @RestController, uncomment this
-    //@ResponseBody
+    @ResponseBody
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
         logger.info("Single file upload!");
