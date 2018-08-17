@@ -1,11 +1,7 @@
 package service.data;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.lang.Boolean;
-import java.util.function.BinaryOperator;
 
 public class RefrigeratorItem {
 
