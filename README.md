@@ -163,7 +163,7 @@ Notify has been turned off..%
 ### Get all userId
 
 ```
-curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/{userId}/get_uid"
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/user/{userId}/get_uid"
 ```
 
 Then, you would get the result like the following:
