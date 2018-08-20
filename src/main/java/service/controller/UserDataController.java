@@ -1,5 +1,7 @@
 package service.controller;
 
+import service.util.ReadQRCode;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+
 import service.data.User;
 import service.data.UserList;
 import service.model.UserId;
@@ -66,7 +82,41 @@ public class UserDataController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
-    
+    // @PostMapping(value = "/{userId}/post_uid", produces = "application/json")
+    // public ResponseEntity<String> PostUIdtoDB(@RequestBody String uid) throws JsonGenerationException, JsonMappingException, IOException {
+    //     System.out.println("---------start---------");
+    //     ReadQRCode readQRcode = new ReadQRCode();
+    //     try {
+    //         readQRcode.scanQRcode();
+    //     } catch(Exception e) {
+    //         System.out.println(e.getMessage());
+    //     }
+    //     return new ResponseEntity<>(reply, HttpStatus.OK);
+    // }
 
+    @PostMapping("/upload") 
+    public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            return "isEmpty";
+        }
+
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get("./out/" + file.getOriginalFilename());
+            System.out.println("upload successfully: " + path);
+            Files.write(path, bytes);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return "redirect:/uploadStatus";
+    }
 
 }
