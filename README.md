@@ -91,7 +91,7 @@ save to db.%
 ### Post the adding item manually
 
 ```
-curl --header "Content-Type: application/json" --request POST --data '{"nameZh":"可樂","type":"飲料","expirationDate":"2019-09-29"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item
+curl --header "Content-Type: application/json" --request POST --data '{"nameZh":"可樂","type":"飲料","acquisitionDate":"2019-09-29","expirationDate":"2019-09-29"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/add_item
 ```
 
 Then, you would get the result like the following:
