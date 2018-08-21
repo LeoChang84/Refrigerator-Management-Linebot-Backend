@@ -1,11 +1,7 @@
 package service.data;
 
-import service.data.RefrigeratorItem;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;  
-import java.lang.Boolean;
+import java.util.List;
 
 public class RefrigeratorList {
 

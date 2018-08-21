@@ -1,8 +1,6 @@
 package service.repository;
 
 import service.model.Food;
-
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

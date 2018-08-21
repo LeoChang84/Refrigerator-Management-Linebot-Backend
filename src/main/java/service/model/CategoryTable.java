@@ -3,8 +3,6 @@ package service.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.lang.Boolean;
-
 @Document(collection = "categorytable")
 public class CategoryTable {
 

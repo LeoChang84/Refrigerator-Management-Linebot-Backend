@@ -1,16 +1,8 @@
 package service.repository.impl;
 
 import service.repository.EditedRepository;
-import service.model.Food;
-
-import org.springframework.data.annotation.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-
-import java.util.List;
 
 public class EditedRepositoryImpl implements EditedRepository {
 
