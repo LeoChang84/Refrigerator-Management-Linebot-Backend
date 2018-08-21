@@ -22,7 +22,7 @@ public class ReadQRCode {
 
 	public ReadQRCode() { }
 
-	public void scanQRcode(String path) throws IOException, NotFoundException {
+	public String scanQRcode(String path) throws IOException, NotFoundException {
  		System.out.println("----------Try to scan QR code--------------");
 		File QRfile = new File(path);
 		BufferedImage bufferedImg = ImageIO.read(QRfile);
@@ -33,11 +33,14 @@ public class ReadQRCode {
         hints.put(EncodeHintType.CHARACTER_SET,"utf-8");
 		Result result = new MultiFormatReader().decode(bitmap, hints);
 		logger.info("Get result");
+		String reply = "";
 		if (null == result) {
 			logger.info("-----------Scan QR code null--------------");
 		} else {
 			System.out.println("Barcode Format: " + result.getBarcodeFormat());
 			System.out.println("Content: " + result.getText());
+			reply = result.getText();
 		}
+		return reply;
 	}
 }

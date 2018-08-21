@@ -87,6 +87,7 @@ public class UserDataController {
             return new ResponseEntity<>(reply, HttpStatus.OK);
         }
 
+        String result = "";
         try {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
@@ -96,10 +97,10 @@ public class UserDataController {
 
             redirectAttributes.addFlashAttribute("message",
                     "You successfully uploaded '" + file.getOriginalFilename() + "'");
-
-            ReadQRCode readQRCode = new ReadQRCode();
+            // ReadQRCode readQRCode = new ReadQRCode();
+            // result = new ReadQRCode().scanQRcode(path);
             try {
-                readQRCode.scanQRcode(String.valueOf(path));
+                result = new ReadQRCode().scanQRcode(String.valueOf(path));
             } catch (Exception e) {
                 logger.info("Error be caugth");
                 e.printStackTrace();
@@ -107,6 +108,23 @@ public class UserDataController {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
+        }
+        if (result.length() > 77) {
+            String[] reciptList = result.split(":");
+            int loop = (reciptList.length - 5) / 3;
+            for (int i = 0; i < loop; i++) {
+                System.out.println(reciptList[5 + i * 3]);
+            }
+            System.out.println(reciptList.length);
+        } else if (result.length() > 0) {
+            String[] reciptList = result.split(":");
+            int loop = (reciptList.length - 1) / 3;
+            for (int i = 0; i < loop; i++) {
+                System.out.println(reciptList[1 + i * 3]);
+            }
+            System.out.println(reciptList.length);
+        } else {
+
         }
         reply = "QR code be parsed successfully";
         return new ResponseEntity<>(reply, HttpStatus.OK);
