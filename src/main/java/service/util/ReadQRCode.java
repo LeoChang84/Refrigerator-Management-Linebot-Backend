@@ -3,7 +3,6 @@ package service.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import javax.imageio.ImageIO;
  
 import com.google.zxing.BinaryBitmap;
@@ -18,15 +17,13 @@ public class ReadQRCode {
  	
 	public ReadQRCode() { }
 
-	public void scanQRcode() throws IOException, NotFoundException {
- 		System.out.println("----------before get path--------------");
-		File QRfile = new File("./src/main/resources/qrcode.png");
- 		System.out.println("----------get path , before read--------------");
+	public void scanQRcode(String path) throws IOException, NotFoundException {
+ 		System.out.println("----------Try to scan QR code--------------");
+		File QRfile = new File(path);
 		BufferedImage bufferedImg = ImageIO.read(QRfile);
- 		System.out.println("----------!!!--------------");
 		LuminanceSource source = new BufferedImageLuminanceSource(bufferedImg);
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
- 		System.out.println("----------!!!--------------");
+ 		System.out.println("----------Scan QR code OK--------------");
 		Result result = new MultiFormatReader().decode(bitmap);
 		System.out.println("Barcode Format: " + result.getBarcodeFormat());
 		System.out.println("Content: " + result.getText());
