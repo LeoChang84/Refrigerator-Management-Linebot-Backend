@@ -40,7 +40,7 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserDataController {
 
-    static private Logger logger = LoggerFactory.getLogger(CabinetController.class.getName());
+    static private Logger logger = LoggerFactory.getLogger(UserDataController.class.getName());
 
     @Autowired
     UserIdRepository userIdRepository;
@@ -101,7 +101,8 @@ public class UserDataController {
             try {
                 readQRCode.scanQRcode(String.valueOf(path));
             } catch (Exception e) {
-                System.out.print(e.getMessage());
+                logger.info("Error be caugth");
+                e.printStackTrace();
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
