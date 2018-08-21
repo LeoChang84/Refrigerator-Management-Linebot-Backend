@@ -184,3 +184,16 @@ Then, you would get the result like the following:
 ```
 Post uid to UserList.%
 ```
+
+### Parse QR code
+
+
+```
+curl -F "file=@./test.png"  https://refrigerator-mgt-bot-backend.herokuapp.com/user/upload
+```
+
+Then, you would get the result like the following:
+
+```
+QR code be parsed successfully%
+```
