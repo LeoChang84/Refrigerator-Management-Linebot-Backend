@@ -197,3 +197,15 @@ Then, you would get the result like the following:
 ```
 QR code be parsed successfully%
 ```
+
+### Save QR code result to db
+
+```
+curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/user/downloadFile/sample.png"
+```
+
+Then, you would get the result like the following:
+
+```
+save file successfully
+```

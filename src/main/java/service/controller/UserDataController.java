@@ -37,11 +37,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @RestController
 @RequestMapping(value = "/user")
 public class UserDataController {
 
     static private Logger logger = LoggerFactory.getLogger(UserDataController.class.getName());
+
+    private static final int BUFFER_SIZE = 4096;
 
     @Autowired
     CabinetController cabinetController;
@@ -118,7 +127,6 @@ public class UserDataController {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-//        ObjectMapper mapper = new ObjectMapper();
         LocalDate now = LocalDate.now();
         if (result.length() > 77) {
             String[] receiptList = result.split(":");
@@ -168,4 +176,104 @@ public class UserDataController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/downloadFile/{fileName}") 
+    public ResponseEntity<String> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
+        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
+        String saveDir = "./src/main/resources/picture/";
+        URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+ 
+        // always check HTTP response code first
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            // fileName = "";
+            String disposition = httpConn.getHeaderField("Content-Disposition");
+            String contentType = httpConn.getContentType();
+            int contentLength = httpConn.getContentLength();
+ 
+            System.out.println("Content-Type = " + contentType);
+            System.out.println("Content-Disposition = " + disposition);
+            System.out.println("Content-Length = " + contentLength);
+            System.out.println("fileName = " + fileName);
+ 
+            // opens input stream from the HTTP connection
+            InputStream inputStream = httpConn.getInputStream();
+            String saveFilePath = saveDir + File.separator + fileName;
+             
+            // opens an output stream to save into file
+            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+ 
+            int bytesRead = -1;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+ 
+            outputStream.close();
+            inputStream.close();
+ 
+            System.out.println("File downloaded");
+        } else {
+            System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+        }
+        httpConn.disconnect();
+
+        logger.info(saveDir + fileName);
+        addQRcodeTodb(saveDir + fileName);
+
+        String reply = "save file successfully";
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
+    public void addQRcodeTodb(String path) {
+        String result = "";
+        try {
+            result = new ReadQRCode().scanQRcode(String.valueOf(path));
+        } catch (Exception e) {
+            logger.info("Error be caugth");
+        }
+        LocalDate now = LocalDate.now();
+        if (result.length() > 77) {
+            String[] receiptList = result.split(":");
+            int loop = (receiptList.length - 5) / 3;
+            for (int i = 0; i < loop; i++) {
+                CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[5 + i * 3]);
+                ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[5 + i * 3]);
+                EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
+                String expiration = "0";
+                if (expirationDoc != null) {
+                    expiration = expirationDoc.getExpirationDate();
+                }
+                Boolean flag = Boolean.FALSE;
+                if (easyExpired != null) { flag = Boolean.TRUE; }
+
+                Food test = new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+                logger.info(test.getNameZh() + test.getType() + test.getAcquisitionDate() + test.getExpirationDate() + test.getStatus().toString() );
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+
+                System.out.println(receiptList[5 + i * 3]);
+            }
+            System.out.println(receiptList.length);
+        } else if (result.length() > 0) {
+            String[] receiptList = result.split(":");
+            int loop = (receiptList.length - 1) / 3;
+            for (int i = 0; i < loop; i++) {
+                CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[1 + i * 3]);
+                ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[1 + i * 3]);
+                EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
+                String expiration = "0";
+                if (expirationDoc != null) {
+                    expiration = expirationDoc.getExpirationDate();
+                }
+                Boolean flag = Boolean.FALSE;
+                if (easyExpired != null) { flag = Boolean.TRUE; }
+                logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+
+                System.out.println(receiptList[1 + i * 3]);
+            }
+            System.out.println(receiptList.length);
+        }
+    }
 }
