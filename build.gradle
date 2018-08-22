@@ -36,8 +36,10 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6')
     compile(group: 'joda-time', name: 'joda-time', version: '2.10')
     compile(group: 'com.github.jai-imageio', name: 'jai-imageio-core', version: '1.4.0')
-    compile group: 'com.google.zxing', name: 'javase', version: '3.3.3'
-    compile(group: 'com.google.zxing', name: 'core', version: '3.3.3')
+    //compile group: 'com.google.zxing', name: 'javase', version: '3.3.3'
+    //compile(group: 'com.google.zxing', name: 'core', version: '3.3.3')
+    compile('com.google.zxing:core:3.3.0')
+    compile('com.google.zxing:javase:3.3.0')
     testCompile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6')
     testCompile('junit:junit')
 }

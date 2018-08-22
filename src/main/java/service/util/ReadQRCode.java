@@ -3,8 +3,10 @@ package service.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.EnumSet;
 import java.nio.charset.Charset;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.BarcodeFormat;
 
 
 public class ReadQRCode {
@@ -27,16 +30,31 @@ public class ReadQRCode {
 	public ReadQRCode() { }
 
 	public String scanQRcode(String path) throws IOException, NotFoundException {
- 		System.out.println("----------Try to scan QR code--------------");
-		File QRfile = new File(path);
-		BufferedImage bufferedImg = ImageIO.read(QRfile);
+ 		logger.info("----------Try to scan QR code--------------");
+ 		logger.info(path);
+		File qrFile = new File(path);
+		FileInputStream qrFileInputStream = new FileInputStream(qrFile);
+      	if (qrFile.isFile() && qrFile.canRead()){
+        	logger.info("File can be read!");
+      	} else { logger.info("File be readed fail.");}
+
+		logger.info("new File " + qrFile.getPath());
+		BufferedImage bufferedImg = ImageIO.read(qrFileInputStream);
+		if (bufferedImg == null) {
+			logger.info("bufferedImg is null");
+		} else { logger.info("ImageIO read: " + bufferedImg.getHeight() + " " + bufferedImg.getWidth()); }
+
 		LuminanceSource source = new BufferedImageLuminanceSource(bufferedImg);
+		if (source == null) { logger.info("BufferedImageLuminanceSource is null"); }
+		logger.info("BufferedImageLuminanceSource source");
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
- 		System.out.println("----------Scan QR code OK--------------");
+ 		logger.info("----------Scan QR code OK--------------");
 		Map<DecodeHintType, Object> hints = new LinkedHashMap<DecodeHintType, Object>();
 		hints.put(DecodeHintType.CHARACTER_SET,"utf-8");
 		hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+		hints.put(DecodeHintType.POSSIBLE_FORMATS,EnumSet.allOf(BarcodeFormat.class));
         hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
+        logger.info("try to decode with MultiFormatReader");
 		Result result = new MultiFormatReader().decode(bitmap, hints);
 		logger.info("Get result");
 		String reply = "";

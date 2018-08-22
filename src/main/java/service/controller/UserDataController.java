@@ -130,7 +130,7 @@ public class UserDataController {
         LocalDate now = LocalDate.now();
         if (result.length() > 77) {
             String[] receiptList = result.split(":");
-            int loop = (receiptList.length - 5) / 3;
+            int loop = ((receiptList.length - 5) / 3) + 1;
             for (int i = 0; i < loop; i++) {
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[5 + i * 3]);
                 ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[5 + i * 3]);
@@ -152,7 +152,7 @@ public class UserDataController {
             System.out.println(receiptList.length);
         } else if (result.length() > 0) {
             String[] receiptList = result.split(":");
-            int loop = (receiptList.length - 1) / 3;
+            int loop = ((receiptList.length - 1) / 3) + 1;
             for (int i = 0; i < loop; i++) {
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[1 + i * 3]);
                 ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[1 + i * 3]);
@@ -178,23 +178,24 @@ public class UserDataController {
 
     @GetMapping(value = "/downloadFile/{fileName}") 
     public ResponseEntity<String> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
-        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
+        String fileURL = "https://i.imgur.com/" + fileName;
         String saveDir = "./src/main/resources/picture/";
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         int responseCode = httpConn.getResponseCode();
  
         // always check HTTP response code first
+        logger.info("try to downloadFile from: " + fileURL);
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // fileName = "";
             String disposition = httpConn.getHeaderField("Content-Disposition");
             String contentType = httpConn.getContentType();
             int contentLength = httpConn.getContentLength();
  
-            System.out.println("Content-Type = " + contentType);
-            System.out.println("Content-Disposition = " + disposition);
-            System.out.println("Content-Length = " + contentLength);
-            System.out.println("fileName = " + fileName);
+            logger.info("Content-Type = " + contentType);
+            logger.info("Content-Disposition = " + disposition);
+            logger.info("Content-Length = " + contentLength);
+            logger.info("fileName = " + fileName);
  
             // opens input stream from the HTTP connection
             InputStream inputStream = httpConn.getInputStream();
@@ -212,9 +213,9 @@ public class UserDataController {
             outputStream.close();
             inputStream.close();
  
-            System.out.println("File downloaded");
+            logger.info("File downloaded");
         } else {
-            System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+            logger.info("No file to download. Server replied HTTP code: " + responseCode);
         }
         httpConn.disconnect();
 
@@ -229,14 +230,20 @@ public class UserDataController {
         String result = "";
         try {
             result = new ReadQRCode().scanQRcode(String.valueOf(path));
+            logger.info(result);
         } catch (Exception e) {
             logger.info("Error be caugth");
+            e.printStackTrace() ;
         }
         LocalDate now = LocalDate.now();
         if (result.length() > 77) {
+            logger.info("result len: " + result.length());
             String[] receiptList = result.split(":");
-            int loop = (receiptList.length - 5) / 3;
+            logger.info("receiptList.length : " + String.valueOf(receiptList.length));
+            int loop = ((receiptList.length - 5) / 3) + 1;
+            logger.info(String.valueOf(loop));
             for (int i = 0; i < loop; i++) {
+                logger.info(receiptList[5 + i * 3]);
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[5 + i * 3]);
                 ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[5 + i * 3]);
                 EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
@@ -252,13 +259,16 @@ public class UserDataController {
                 Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
                 logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
 
-                System.out.println(receiptList[5 + i * 3]);
+                logger.info(receiptList[5 + i * 3]);
             }
             System.out.println(receiptList.length);
         } else if (result.length() > 0) {
+            logger.info("result len: " + result.length());
             String[] receiptList = result.split(":");
-            int loop = (receiptList.length - 1) / 3;
+            int loop = ((receiptList.length - 1) / 3) + 1;
+            logger.info(String.valueOf(loop));
             for (int i = 0; i < loop; i++) {
+                logger.info((receiptList[1 + i * 3]));
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[1 + i * 3]);
                 ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[1 + i * 3]);
                 EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
@@ -271,7 +281,7 @@ public class UserDataController {
                 logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
                 Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
 
-                System.out.println(receiptList[1 + i * 3]);
+                logger.info(receiptList[1 + i * 3]);
             }
             System.out.println(receiptList.length);
         }
