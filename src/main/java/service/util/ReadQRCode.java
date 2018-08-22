@@ -3,7 +3,9 @@ package service.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.nio.charset.Charset;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,8 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.DecodeHintType;
+
 
 public class ReadQRCode {
 
@@ -29,8 +33,10 @@ public class ReadQRCode {
 		LuminanceSource source = new BufferedImageLuminanceSource(bufferedImg);
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
  		System.out.println("----------Scan QR code OK--------------");
-        HashMap hints = new HashMap();
-        hints.put(EncodeHintType.CHARACTER_SET,"utf-8");
+		Map<DecodeHintType, Object> hints = new LinkedHashMap<DecodeHintType, Object>();
+		hints.put(DecodeHintType.CHARACTER_SET,"utf-8");
+		hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+        hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
 		Result result = new MultiFormatReader().decode(bitmap, hints);
 		logger.info("Get result");
 		String reply = "";
