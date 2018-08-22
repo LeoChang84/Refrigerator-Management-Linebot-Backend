@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import jdk.vm.ci.meta.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,11 @@ import java.nio.file.Paths;
 import service.data.AddItemToShoppingList;
 import service.data.User;
 import service.data.UserList;
-import service.model.CategoryTable;
-import service.model.UserId;
-import service.repository.CategoryTableRepository;
-import service.repository.UserIdRepository;
+import service.model.*;
+import service.repository.*;
 import service.util.ReadQRCode;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,12 @@ public class UserDataController {
     UserIdRepository userIdRepository;
     @Autowired
     CategoryTableRepository categoryTableRepository;
+    @Autowired
+    ExpirationRepository expirationRepository;
+    @Autowired
+    EasyExpiredrepository easyExpiredrepository;
+    @Autowired
+    CabinetRepository cabinetRepository;
 
     @GetMapping(value = "/{userId}/get_uid", produces = "application/json")
     public ResponseEntity<UserList> getUserId(@PathVariable("userId") String userId) {
@@ -114,14 +121,22 @@ public class UserDataController {
             e.printStackTrace();
         }
         ObjectMapper mapper = new ObjectMapper();
+        LocalDate now = LocalDate.now();
         if (result.length() > 77) {
             String[] receiptList = result.split(":");
             int loop = (receiptList.length - 5) / 3;
             for (int i = 0; i < loop; i++) {
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[5 + i * 3]);
+                ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[5 + i * 3]);
+                EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
+                String expiration = "0";
+                if (expirationDoc != null) {
+                    expiration = expirationDoc.getExpirationDate();
+                }
+                Boolean flag = Boolean.FALSE;
+                if (easyExpired != null) { flag = Boolean.TRUE; }
                 try {
-                    String jsonInString = mapper.writeValueAsString(new AddItemToShoppingList(categoryTable.getNameZh(), categoryTable.getType()));
-                    cabinetController.itemToShoppingList(jsonInString);
+                    Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
                 } catch (Exception e) {
                     logger.info("parse object error");
                 }
@@ -133,9 +148,16 @@ public class UserDataController {
             int loop = (receiptList.length - 1) / 3;
             for (int i = 0; i < loop; i++) {
                 CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[1 + i * 3]);
+                ExpirationDoc expirationDoc = expirationRepository.findByNameZh(receiptList[1 + i * 3]);
+                EasyExpired easyExpired = easyExpiredrepository.findOneByType(categoryTable.getType());
+                String expiration = "0";
+                if (expirationDoc != null) {
+                    expiration = expirationDoc.getExpirationDate();
+                }
+                Boolean flag = Boolean.FALSE;
+                if (easyExpired != null) { flag = Boolean.TRUE; }
                 try {
-                    String jsonInString = mapper.writeValueAsString(new AddItemToShoppingList(categoryTable.getNameZh(), categoryTable.getType()));
-                    cabinetController.itemToShoppingList(jsonInString);
+                    Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
                 } catch (Exception e) {
                     logger.info("parse object error");
                 }

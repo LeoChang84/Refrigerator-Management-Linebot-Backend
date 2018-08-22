@@ -336,6 +336,7 @@ public class CabinetController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+
     public String calculateExpirationDate(LocalDate now, LocalDate expirationDate) {
     	return String.valueOf(ChronoUnit.DAYS.between(now, expirationDate));
     }
