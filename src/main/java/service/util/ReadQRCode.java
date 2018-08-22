@@ -67,4 +67,29 @@ public class ReadQRCode {
 		}
 		return reply;
 	}
+
+	// private static String decodeYUVByZbar(byte[] bmpYUVBytes, int bmpWidth, int bmpHeight) { 
+	//     String zbarResult = ""; 
+	// 	// Both dimensions must be greater than 0
+	//     if (null != bmpYUVBytes && bmpWidth > 0 && bmpHeight > 0) { 
+	//         ZBarDecoder decoder = new ZBarDecoder(); 
+	//         zbarResult = decoder.decodeRaw(bmpYUVBytes, bmpWidth, bmpHeight); 
+	//     } 
+	//     Log.e("HtscCodeScanningUtil", "decode by zbar, result = " + zbarResult); 
+	//     return zbarResult; 
+	// }
+
+	// private static String decodeYUVByZxing(byte[] bmpYUVBytes, int bmpWidth, int bmpHeight) { 
+	//     String zxingResult = ""; 
+	//     // Both dimensions must be greater than 0 
+	//     if (null != bmpYUVBytes && bmpWidth > 0 && bmpHeight > 0) { 
+	//         try { PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(bmpYUVBytes, bmpWidth, bmpHeight, 0, 0, bmpWidth, bmpHeight, true); 
+	//         BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source)); 
+	//         Reader reader = new QRCodeReader(); 
+	//         Result result = reader.decode(binaryBitmap); 
+	//         if (null != result) { zxingResult = result.getText(); } 
+	//     } catch (Exception e) { e.printStackTrace(); } } 
+	//     return zxingResult; 
+	// }
+
 }
