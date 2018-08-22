@@ -133,12 +133,12 @@ public class UserDataController {
                 }
                 Boolean flag = Boolean.FALSE;
                 if (easyExpired != null) { flag = Boolean.TRUE; }
-                try {
-                    Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
-                    logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-                } catch (Exception e) {
-                    logger.info("parse object error");
-                }
+
+                Food test = new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+                logger.info(test.getNameZh() + test.getType() + test.getAcquisitionDate() + test.getExpirationDate() + test.getStatus().toString() );
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+
                 System.out.println(receiptList[5 + i * 3]);
             }
             System.out.println(receiptList.length);
@@ -155,12 +155,9 @@ public class UserDataController {
                 }
                 Boolean flag = Boolean.FALSE;
                 if (easyExpired != null) { flag = Boolean.TRUE; }
-                try {
-                    Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
-                    logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-                } catch (Exception e) {
-                    logger.info("parse object error");
-                }
+                logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+
                 System.out.println(receiptList[1 + i * 3]);
             }
             System.out.println(receiptList.length);
