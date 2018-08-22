@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import jdk.vm.ci.meta.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +118,7 @@ public class UserDataController {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        ObjectMapper mapper = new ObjectMapper();
+//        ObjectMapper mapper = new ObjectMapper();
         LocalDate now = LocalDate.now();
         if (result.length() > 77) {
             String[] receiptList = result.split(":");
@@ -137,6 +135,7 @@ public class UserDataController {
                 if (easyExpired != null) { flag = Boolean.TRUE; }
                 try {
                     Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                    logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
                 } catch (Exception e) {
                     logger.info("parse object error");
                 }
@@ -158,6 +157,7 @@ public class UserDataController {
                 if (easyExpired != null) { flag = Boolean.TRUE; }
                 try {
                     Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                    logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
                 } catch (Exception e) {
                     logger.info("parse object error");
                 }
