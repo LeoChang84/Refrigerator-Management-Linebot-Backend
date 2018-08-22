@@ -26,10 +26,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-
+import service.data.AddItemToShoppingList;
 import service.data.User;
 import service.data.UserList;
+import service.model.CategoryTable;
 import service.model.UserId;
+import service.repository.CategoryTableRepository;
 import service.repository.UserIdRepository;
 import service.util.ReadQRCode;
 
@@ -43,10 +45,14 @@ public class UserDataController {
     static private Logger logger = LoggerFactory.getLogger(UserDataController.class.getName());
 
     @Autowired
+    CabinetController cabinetController;
+    @Autowired
     UserIdRepository userIdRepository;
+    @Autowired
+    CategoryTableRepository categoryTableRepository;
 
     @GetMapping(value = "/{userId}/get_uid", produces = "application/json")
-    public ResponseEntity<UserList> GetUserId(@PathVariable("userId") String userId) {
+    public ResponseEntity<UserList> getUserId(@PathVariable("userId") String userId) {
         logger.info("Start to get User List");
         List<UserId> UIds  = userIdRepository.findAll();
         if (null == UIds || UIds.isEmpty()) {
@@ -64,7 +70,7 @@ public class UserDataController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
     @PostMapping(value = "/{userId}/post_uid", produces = "application/json")
-    public ResponseEntity<String> PostUIdtoDB(@RequestBody String uid) throws JsonGenerationException, JsonMappingException, IOException {
+    public ResponseEntity<String> postUIdtoDB(@RequestBody String uid) throws JsonGenerationException, JsonMappingException, IOException {
         logger.info("Start to Post UID to DB");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -95,10 +101,8 @@ public class UserDataController {
             System.out.println("upload successfully: " + path);
             Files.write(path, bytes);
 
-            redirectAttributes.addFlashAttribute("message",
-                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
-            // ReadQRCode readQRCode = new ReadQRCode();
-            // result = new ReadQRCode().scanQRcode(path);
+            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
+
             try {
                 result = new ReadQRCode().scanQRcode(String.valueOf(path));
             } catch (Exception e) {
@@ -109,20 +113,35 @@ public class UserDataController {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        ObjectMapper mapper = new ObjectMapper();
         if (result.length() > 77) {
-            String[] reciptList = result.split(":");
-            int loop = (reciptList.length - 5) / 3;
+            String[] receiptList = result.split(":");
+            int loop = (receiptList.length - 5) / 3;
             for (int i = 0; i < loop; i++) {
-                System.out.println(reciptList[5 + i * 3]);
+                CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[5 + i * 3]);
+                try {
+                    String jsonInString = mapper.writeValueAsString(new AddItemToShoppingList(categoryTable.getNameZh(), categoryTable.getType()));
+                    cabinetController.itemToShoppingList(jsonInString);
+                } catch (Exception e) {
+                    logger.info("parse object error");
+                }
+                System.out.println(receiptList[5 + i * 3]);
             }
-            System.out.println(reciptList.length);
+            System.out.println(receiptList.length);
         } else if (result.length() > 0) {
-            String[] reciptList = result.split(":");
-            int loop = (reciptList.length - 1) / 3;
+            String[] receiptList = result.split(":");
+            int loop = (receiptList.length - 1) / 3;
             for (int i = 0; i < loop; i++) {
-                System.out.println(reciptList[1 + i * 3]);
+                CategoryTable categoryTable = categoryTableRepository.findOneByNameZh(receiptList[1 + i * 3]);
+                try {
+                    String jsonInString = mapper.writeValueAsString(new AddItemToShoppingList(categoryTable.getNameZh(), categoryTable.getType()));
+                    cabinetController.itemToShoppingList(jsonInString);
+                } catch (Exception e) {
+                    logger.info("parse object error");
+                }
+                System.out.println(receiptList[1 + i * 3]);
             }
-            System.out.println(reciptList.length);
+            System.out.println(receiptList.length);
         } else {
 
         }

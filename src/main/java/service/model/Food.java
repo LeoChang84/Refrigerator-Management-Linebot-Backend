@@ -17,16 +17,20 @@ public class Food {
     private Integer status; // 1: in shopping. 2: in refrigerator. 3: has been eaten
     private Boolean eatenBeforeExpired;
     private Boolean notify;
+    private Boolean firstUse;
+    private Boolean easyExpired;
 
 
-	public Food (String nameZh, String type, String acquisitionDate, String expirationDate, Integer status, Boolean eatenBeforeExpired, Boolean notify) {
+	public Food (String nameZh, String type, String acquisitionDate, String expirationDate, Integer status, Boolean eatenBeforeExpired, Boolean notify, Boolean firstUse, Boolean easyExpired) {
 		this.nameZh = nameZh;
 		this.type = type;
 		this.acquisitionDate = acquisitionDate;
     	this.expirationDate = expirationDate;
     	this.status = status;
     	this.eatenBeforeExpired = eatenBeforeExpired;
-    	this.notify =notify;
+    	this.notify = notify;
+    	this.firstUse = firstUse;
+    	this.easyExpired = easyExpired;
 	}
 
     public Food() { }
@@ -63,6 +67,10 @@ public class Food {
     	return notify;
     }
 
+    public Boolean getFirstUse() { return  firstUse; }
+
+    public Boolean getEasyExpired() { return easyExpired; }
+
     public void setNameZh(String nameZh) {
         this.nameZh = nameZh;
     }
@@ -90,6 +98,10 @@ public class Food {
     public void setNotify(Boolean notify) {
         this.notify = notify;
     }
+
+    public void setFirstUse(Boolean firstUse) { this.firstUse = firstUse; }
+
+    public void setEasyExpired(Boolean easyExpired) { this.easyExpired = easyExpired; }
 
     public String toString() {
         return "[" + id + " " + nameZh + " " + type + " " + acquisitionDate + " " + expirationDate + "]";

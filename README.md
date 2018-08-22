@@ -127,7 +127,7 @@ Then, you would get the result like the following:
 ### Update selected item's information in refrigerator
 
 ```
-curl --header "Content-Type: application/json" --request POST --data '{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"2019-12-12"}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/edit_item
+curl --header "Content-Type: application/json" --request POST --data '{"id":"5b6fb35b08f3e000045888b1","nameZh":"牛奶","type":"飲料","acquisitionDate":"2018-08-12","expirationDate":"2019-12-12", "firstUse":false, "easyExpired":false}' https://refrigerator-mgt-bot-backend.herokuapp.com/cabinet/123/edit_item
 ```
 
 Then, you would get the result like the following:
