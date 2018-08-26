@@ -178,7 +178,7 @@ public class UserDataController {
 
     @GetMapping(value = "/downloadFile/{fileName}") 
     public ResponseEntity<String> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
-        String fileURL = "https://i.imgur.com/" + fileName;
+        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
         String saveDir = "./src/main/resources/picture/";
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -220,21 +220,29 @@ public class UserDataController {
         httpConn.disconnect();
 
         logger.info(saveDir + fileName);
-        addQRcodeTodb(saveDir + fileName);
-
-        String reply = "save file successfully";
+        String reply = "";
+        try {
+            reply = addQRcodeTodb(saveDir + fileName);
+        } catch (Exception e) {
+            reply = "fail";
+        }
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
-    public void addQRcodeTodb(String path) {
+    public String addQRcodeTodb(String path) {
+        
         String result = "";
         try {
-            result = new ReadQRCode().scanQRcode(String.valueOf(path));
-            logger.info(result);
+           result = new ReadQRCode().scanQRcode(String.valueOf(path));
         } catch (Exception e) {
-            logger.info("Error be caugth");
-            e.printStackTrace() ;
+            result = "fail";
         }
+
+        logger.info(result);
+        if (result.equals("fail")) {
+            return result;
+        }
+
         LocalDate now = LocalDate.now();
         if (result.length() > 77) {
             logger.info("result len: " + result.length());
@@ -285,5 +293,6 @@ public class UserDataController {
             }
             System.out.println(receiptList.length);
         }
+        return "success";
     }
 }

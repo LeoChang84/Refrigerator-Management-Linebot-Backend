@@ -204,8 +204,14 @@ QR code be parsed successfully%
 curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/user/downloadFile/sample.png"
 ```
 
-Then, you would get the result like the following:
+If the picture can be parsed successfully, you would get the result like the following:
 
 ```
-save file successfully
+success
+```
+
+Otherwise, you will get the result like follwing:
+
+```
+fail
 ```
