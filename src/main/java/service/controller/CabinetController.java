@@ -173,7 +173,9 @@ public class CabinetController {
         	food.setEatenBeforeExpired(null);
         	food.setNotify(Boolean.TRUE);
         	food.setFirstUse(Boolean.TRUE);
-            EasyExpired easyExpired = easyExpiredrepository.findOneByType(food.getType());
+        	logger.info("food get type");
+        	logger.info(food.getType());
+            EasyExpired easyExpired = easyExpiredrepository.findOneByNameZh(food.getNameZh());
             if (easyExpired == null) {
                 food.setEasyExpired(Boolean.FALSE);
             } else {

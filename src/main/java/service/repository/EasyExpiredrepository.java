@@ -8,4 +8,5 @@ import java.util.List;
 public interface EasyExpiredrepository extends MongoRepository<EasyExpired, String>, EditedRepository{
 
     public EasyExpired findOneByType(String type);
+    public EasyExpired findOneByNameZh(String NameZh);
 }
