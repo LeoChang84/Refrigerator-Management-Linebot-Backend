@@ -201,7 +201,7 @@ QR code be parsed successfully%
 ### Save QR code result to db
 
 ```
-curl -X GET "https://refrigerator-mgt-bot-backend.herokuapp.com/user/downloadFile/sample.png"
+curl -X GET "https://refrigerator-management-bot.herokuapp.com/user/downloadFile/sample.png"
 ```
 
 If the picture can be parsed successfully, you would get the result like the following:
