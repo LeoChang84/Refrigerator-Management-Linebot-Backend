@@ -55,41 +55,13 @@ public class ReadQRCode {
 		hints.put(DecodeHintType.POSSIBLE_FORMATS,EnumSet.allOf(BarcodeFormat.class));
         hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
         logger.info("try to decode with MultiFormatReader");
-		Result result = new MultiFormatReader().decode(bitmap, hints);
-		logger.info("Get result");
-		String reply = "";
-		if (null == result) {
-			logger.info("-----------Scan QR code null--------------");
-		} else {
+        try {
+			Result result = new MultiFormatReader().decode(bitmap, hints);
 			System.out.println("Barcode Format: " + result.getBarcodeFormat());
 			System.out.println("Content: " + result.getText());
-			reply = result.getText();
-		}
-		return reply;
+			return result.getText();
+        } catch (Exception e) {
+        	return "fail";
+        }
 	}
-
-	// private static String decodeYUVByZbar(byte[] bmpYUVBytes, int bmpWidth, int bmpHeight) { 
-	//     String zbarResult = ""; 
-	// 	// Both dimensions must be greater than 0
-	//     if (null != bmpYUVBytes && bmpWidth > 0 && bmpHeight > 0) { 
-	//         ZBarDecoder decoder = new ZBarDecoder(); 
-	//         zbarResult = decoder.decodeRaw(bmpYUVBytes, bmpWidth, bmpHeight); 
-	//     } 
-	//     Log.e("HtscCodeScanningUtil", "decode by zbar, result = " + zbarResult); 
-	//     return zbarResult; 
-	// }
-
-	// private static String decodeYUVByZxing(byte[] bmpYUVBytes, int bmpWidth, int bmpHeight) { 
-	//     String zxingResult = ""; 
-	//     // Both dimensions must be greater than 0 
-	//     if (null != bmpYUVBytes && bmpWidth > 0 && bmpHeight > 0) { 
-	//         try { PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(bmpYUVBytes, bmpWidth, bmpHeight, 0, 0, bmpWidth, bmpHeight, true); 
-	//         BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source)); 
-	//         Reader reader = new QRCodeReader(); 
-	//         Result result = reader.decode(binaryBitmap); 
-	//         if (null != result) { zxingResult = result.getText(); } 
-	//     } catch (Exception e) { e.printStackTrace(); } } 
-	//     return zxingResult; 
-	// }
-
 }
