@@ -201,7 +201,7 @@ public class CabinetController {
 
 		LocalDate now = LocalDate.now();
         String expirationDate = calculateExpirationDate(now, LocalDate.parse(addedItem.getExpirationDate()));
-        EasyExpired easyExpired = easyExpiredrepository.findOneByType(addedItem.getType());
+        EasyExpired easyExpired = easyExpiredrepository.findOneByNameZh(addedItem.getNameZh());
         Boolean flag = Boolean.FALSE;
         if (easyExpired != null) {
             flag = Boolean.TRUE;
