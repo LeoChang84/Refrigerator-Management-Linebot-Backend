@@ -176,8 +176,8 @@ public class UserDataController {
 
     @GetMapping(value = "/downloadFile/{fileName}") 
     public ResponseEntity<ShoppingList> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
-        String fileURL = "https://i.imgur.com/" + fileName;
-//        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
+//        String fileURL = "https://i.imgur.com/" + fileName;
+        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
         String saveDir = "./src/main/resources/picture/";
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
