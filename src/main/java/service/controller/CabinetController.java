@@ -104,7 +104,7 @@ public class CabinetController {
         logger.info("Parse input object successfully: " + shoppingItem);
 
         Food food = cabinetRepository.findOneById(shoppingItem.getId());
-        food.setStatus(4);
+        food.setStatus(1);
         food = cabinetRepository.save(food);
         logger.info("Delete from db successfully.");
         String reply = "Delete item from shoppingList." ;
