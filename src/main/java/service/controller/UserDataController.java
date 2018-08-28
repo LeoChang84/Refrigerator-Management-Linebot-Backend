@@ -176,8 +176,8 @@ public class UserDataController {
 
     @GetMapping(value = "/downloadFile/{fileName}") 
     public ResponseEntity<ShoppingList> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
-//        String fileURL = "https://i.imgur.com/" + fileName;
-        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
+        String fileURL = "https://i.imgur.com/" + fileName;
+//        String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
         String saveDir = "./src/main/resources/picture/";
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -266,11 +266,9 @@ public class UserDataController {
                 Boolean flag = Boolean.FALSE;
                 if (easyExpired != null) { flag = Boolean.TRUE; }
 
-//                Food test = new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-//                logger.info(test.getNameZh() + test.getType() + test.getAcquisitionDate() + test.getExpirationDate() + test.getStatus().toString() );
-                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 2, null, Boolean.TRUE, Boolean.TRUE , flag));
                 shoppingItems.add(new ShoppingItem((categoryTable.getNameZh())));
-                logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+                logger.info(categoryTable.getNameZh() + " " + categoryTable.getType() + " " + String.valueOf(now) + " " + expiration);
                 logger.info(receiptList[5 + i * 3]);
             }
             System.out.println(receiptList.length);
@@ -291,8 +289,9 @@ public class UserDataController {
                 Boolean flag = Boolean.FALSE;
                 if (easyExpired != null) { flag = Boolean.TRUE; }
                 logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 2, null, Boolean.TRUE, Boolean.TRUE , flag));
                 shoppingItems.add(new ShoppingItem((categoryTable.getNameZh())));
+                logger.info(categoryTable.getNameZh() + " " + categoryTable.getType() + " " + String.valueOf(now) + " " + expiration);
                 logger.info(receiptList[1 + i * 3]);
             }
             System.out.println(receiptList.length);
