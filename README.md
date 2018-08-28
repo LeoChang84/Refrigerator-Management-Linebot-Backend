@@ -207,11 +207,17 @@ curl -X GET "https://refrigerator-management-bot.herokuapp.com/user/downloadFile
 If the picture can be parsed successfully, you would get the result like the following:
 
 ```
-success
+{"shoppingItems":[{"id":null,"nameZh":"成功存進冰箱的QRcode","type":null}]}%
 ```
 
-Otherwise, you will get the result like follwing:
+Otherwise, you will get the result like following when user added Item format is not correct:
 
 ```
-fail
+{"shoppingItems":[]}%
+```
+
+And, you will get the following result if parser is fail or catch exception:
+
+```
+{"shoppingItems":[{"id":null,"nameZh":"fail","type":null}]}%
 ```

@@ -26,9 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-import service.data.AddItemToShoppingList;
-import service.data.User;
-import service.data.UserList;
+import service.data.*;
 import service.model.*;
 import service.repository.*;
 import service.util.ReadQRCode;
@@ -177,7 +175,8 @@ public class UserDataController {
     }
 
     @GetMapping(value = "/downloadFile/{fileName}") 
-    public ResponseEntity<String> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
+    public ResponseEntity<ShoppingList> downloadFile(@PathVariable("fileName") String fileName) throws IOException {
+//        String fileURL = "https://i.imgur.com/" + fileName;
         String fileURL = "https://refrigerator-management-bot.herokuapp.com/" + fileName;
         String saveDir = "./src/main/resources/picture/";
         URL url = new URL(fileURL);
@@ -220,27 +219,32 @@ public class UserDataController {
         httpConn.disconnect();
 
         logger.info(saveDir + fileName);
-        String reply = "";
         try {
-            reply = addQRcodeTodb(saveDir + fileName);
+            List<ShoppingItem> shoppingItems = addQRcodeTodb(saveDir + fileName);
+            return new ResponseEntity<>(new ShoppingList(shoppingItems), HttpStatus.OK);
         } catch (Exception e) {
-            reply = "fail";
+            List<ShoppingItem> shoppingItems = new ArrayList<ShoppingItem>(){{
+                add(new ShoppingItem(("fail")));
+            }};
+            return new ResponseEntity<>(new ShoppingList(shoppingItems), HttpStatus.OK);
         }
-        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
-    public String addQRcodeTodb(String path) {
+    public List<ShoppingItem> addQRcodeTodb(String path) {
         
         String result = "";
+        List<ShoppingItem> shoppingItems = new ArrayList<>();
         try {
            result = new ReadQRCode().scanQRcode(String.valueOf(path));
         } catch (Exception e) {
-            result = "fail";
+            shoppingItems.add(new ShoppingItem(("fail")));
+            return shoppingItems;
         }
 
         logger.info(result);
         if (result.equals("fail")) {
-            return result;
+            shoppingItems.add(new ShoppingItem(("fail")));
+            return shoppingItems;
         }
 
         LocalDate now = LocalDate.now();
@@ -248,7 +252,7 @@ public class UserDataController {
             logger.info("result len: " + result.length());
             String[] receiptList = result.split(":");
             logger.info("receiptList.length : " + String.valueOf(receiptList.length));
-            int loop = ((receiptList.length - 5) / 3) + 1;
+            int loop = (receiptList.length - 5) / 3;
             logger.info(String.valueOf(loop));
             for (int i = 0; i < loop; i++) {
                 logger.info(receiptList[5 + i * 3]);
@@ -262,18 +266,18 @@ public class UserDataController {
                 Boolean flag = Boolean.FALSE;
                 if (easyExpired != null) { flag = Boolean.TRUE; }
 
-                Food test = new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-                logger.info(test.getNameZh() + test.getType() + test.getAcquisitionDate() + test.getExpirationDate() + test.getStatus().toString() );
+//                Food test = new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
+//                logger.info(test.getNameZh() + test.getType() + test.getAcquisitionDate() + test.getExpirationDate() + test.getStatus().toString() );
                 Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
+                shoppingItems.add(new ShoppingItem((categoryTable.getNameZh())));
                 logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
-
                 logger.info(receiptList[5 + i * 3]);
             }
             System.out.println(receiptList.length);
         } else if (result.length() > 0) {
             logger.info("result len: " + result.length());
             String[] receiptList = result.split(":");
-            int loop = ((receiptList.length - 1) / 3) + 1;
+            int loop = (receiptList.length - 1) / 3;
             logger.info(String.valueOf(loop));
             for (int i = 0; i < loop; i++) {
                 logger.info((receiptList[1 + i * 3]));
@@ -288,11 +292,13 @@ public class UserDataController {
                 if (easyExpired != null) { flag = Boolean.TRUE; }
                 logger.info(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag);
                 Food food = cabinetRepository.save(new Food(categoryTable.getNameZh(), categoryTable.getType(), String.valueOf(now), expiration, 3, null, Boolean.TRUE, Boolean.TRUE , flag));
-
+                shoppingItems.add(new ShoppingItem((categoryTable.getNameZh())));
                 logger.info(receiptList[1 + i * 3]);
             }
             System.out.println(receiptList.length);
+        } else {
+            shoppingItems.add(new ShoppingItem(("fail")));
         }
-        return "success";
+        return shoppingItems;
     }
 }

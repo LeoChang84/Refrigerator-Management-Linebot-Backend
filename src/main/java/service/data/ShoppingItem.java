@@ -11,6 +11,10 @@ public class ShoppingItem {
 
     public ShoppingItem() { }
 
+    public ShoppingItem(String nameZh) {
+        this.nameZh = nameZh;
+    }
+
 	public ShoppingItem (String nameZh, String type) {
 		this.nameZh = nameZh;
 		this.type = type;

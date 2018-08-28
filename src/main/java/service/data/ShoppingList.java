@@ -9,6 +9,8 @@ public class ShoppingList {
 	private String id;
     private List<ShoppingItem> shoppingItems; 
 
+    public ShoppingList () { }
+
 	public ShoppingList (List<ShoppingItem> shoppingItems) {
 		this.shoppingItems = shoppingItems;
 	}
